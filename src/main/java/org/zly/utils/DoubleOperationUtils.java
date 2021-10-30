@@ -1,6 +1,7 @@
 package org.zly.utils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * double类型运算
@@ -107,7 +108,7 @@ public class DoubleOperationUtils {
         }
         BigDecimal b = new BigDecimal(Double.toString(v1));
         BigDecimal one = new BigDecimal("1");
-        return b.divide(one, scale, BigDecimal.ROUND_DOWN).doubleValue();
+        return b.divide(one, scale, RoundingMode.DOWN).doubleValue();
     }
 
 
