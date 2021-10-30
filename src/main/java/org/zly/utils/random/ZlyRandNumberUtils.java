@@ -1,8 +1,12 @@
 package org.zly.utils.random;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.zly.utils.DoubleOperationUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.SecureRandom;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -141,9 +145,43 @@ public class ZlyRandNumberUtils {
         return (long) ((Math.random() * 9 + 1) * Math.pow(10, lenth - 1));
     }
 
-
-
-
-
+    /**
+     * @param minPlaceValue  整数位最小数
+     * @param maxPlaceValue  整数位最大值-1
+     * @param scale          需要几位小数
+     * @param mantissaIsZero 尾数是否允许0，允许的话，随机出来的值的位数会小于指定位数
+     * @return 整数位+小数位随机后的值
+     */
+    public static BigDecimal nextBigDecimal(int minPlaceValue, int maxPlaceValue, int scale, boolean mantissaIsZero) {
+        while (true) {
+            double random = Math.random();
+            BigDecimal randomBig = BigDecimal.valueOf(random).setScale(scale, RoundingMode.HALF_UP);
+            int cardinality = 16;//基数，Math.random()返回的小数点长度
+//            大于16位代表需要增长小数位
+//            计算方法，如:  10/0.1=0.01，按照此列计算，
+//            Math.pow(10, cardinality * i) 可以计算出 random每一次需要相加的数据
+//            如: random = 0.2
+//            cardinality = 1;
+//            scale =2 此时，需要将random增长1位才能满足需求,通过   int numberIndex = scale / cardinality + 1;  2/1+1 = 2  加1的目的是多一次循环，因为除数后转int没有进行四舍五入，防止误差出现
+//            第一次循环， Math.pow(10, 1 * 1) = 10;    0.2/10 = 0.02;   randomBig= 0.02 + 0.2 = 0.22;
+//            第二次循环  Math.pow(10, 1 * 2) = 100    0.2/100 = 0.002  randomBig= 0.22 + 0.002 = 0.222
+//            这样相加可以保证在计算后小数位的前几位出现大量0的情况
+            if (scale > cardinality) {
+                int numberIndex = scale / cardinality + 1;
+                BigDecimal divide;
+                for (int i = 1; i <= numberIndex; i++) {
+                    divide = BigDecimal.valueOf(random).divide(BigDecimal.valueOf(Math.pow(10, cardinality * i)), scale, RoundingMode.HALF_UP);
+                    randomBig = randomBig.add(divide);
+                }
+            }
+            randomBig = randomBig.add(BigDecimal.valueOf(ZlyRandNumberUtils.nextLong(minPlaceValue, maxPlaceValue)));
+            if (!mantissaIsZero) {
+                String number = randomBig.toString();
+                if (!number.endsWith("0")) return randomBig;
+            } else {
+                return randomBig;
+            }
+        }
+    }
 
 }
