@@ -1,14 +1,38 @@
 package org.zly.utils.random;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 随机工具
  */
 public class ZlyRandomCharacterUtils {
+
+    private static final Object NEXT_STRING_UNIQUE_KEY_ARRAY_LOCK = new Object();
+    private static AtomicLong[] NEXT_STRING_UNIQUE_KEY_ARRAY = new AtomicLong[]{nextUniqueKey()};
+
+    private static AtomicLong nextUniqueKey() {
+        return new AtomicLong(System.currentTimeMillis());
+    }
+
     public static String nextString() {
-        return System.currentTimeMillis() + nextUUID();
+        if (NEXT_STRING_UNIQUE_KEY_ARRAY[NEXT_STRING_UNIQUE_KEY_ARRAY.length - 1].get() == Long.MAX_VALUE) {
+            synchronized (NEXT_STRING_UNIQUE_KEY_ARRAY_LOCK) {
+                if (NEXT_STRING_UNIQUE_KEY_ARRAY[NEXT_STRING_UNIQUE_KEY_ARRAY.length - 1].get() == Long.MAX_VALUE) {
+                    NEXT_STRING_UNIQUE_KEY_ARRAY = ArrayUtils.add(NEXT_STRING_UNIQUE_KEY_ARRAY, nextUniqueKey());
+                }
+            }
+        }
+        StringBuilder key = new StringBuilder();
+        for (AtomicLong atomicLong : NEXT_STRING_UNIQUE_KEY_ARRAY) {
+            key.append(atomicLong.incrementAndGet());
+        }
+        return nextUUID() + key;
     }
 
     /**
@@ -236,7 +260,6 @@ public class ZlyRandomCharacterUtils {
     public static String nextRandomPhone() {
         return nextRandomPhone(1).get(0);
     }
-
 
 
     public static List<String> nextRandomPhone(int num) {
