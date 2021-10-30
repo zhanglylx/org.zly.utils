@@ -1,5 +1,6 @@
 package org.zly.utils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,8 @@ public class ZlyReflectUtils {
     public static List<Function<Field, String>> MEMBER_GET_IS = assemblyFormattings(MEMBER_GET, MEMBER_IS);
 
     private static final Map<Class<?>, List<Class<?>>> BUFFER_CLASS = new ConcurrentHashMap<>();
+
+    private static final Map<Class<?>, Type[]> GENERIC_TYPES_CACHE = new ConcurrentHashMap<>();
 
     @SafeVarargs
     public static List<Function<Field, String>> assemblyFormattings(Function<Field, String>... formattings) {
@@ -62,11 +65,7 @@ public class ZlyReflectUtils {
         return fieldsList;
     }
 
-    private String sss;
 
-    public static void main(String[] args) {
-        System.out.println(getDeclaredFields(ZlyReflectUtils.class, true));
-    }
 
     /**
      * 获取class中属性的公共方法
@@ -91,16 +90,6 @@ public class ZlyReflectUtils {
         return methods;
     }
 
-    private String aaa;
-
-    public String getAaa() {
-        return aaa;
-    }
-
-    public void isAaa() {
-        this.aaa = aaa;
-    }
-
     public static Class<?> getGenericClass(Class<?> clazz) {
         return getGenericClass(clazz, 0);
     }
@@ -109,19 +98,39 @@ public class ZlyReflectUtils {
         return (Class<?>) (getGenericTypes(clazz)[index]);
     }
 
-    public static Type[] getGenericTypes(Class<?> clazz) {
-
-        Type[] type = null;
+    public static Class<?> getGenericClass(Class<?> clazz, int index, Class<?> defaultType) {
+        Class<?> c;
         try {
-            Type superClass = clazz.getGenericSuperclass();
-            type = ((ParameterizedType) superClass).getActualTypeArguments();
-        } catch (ClassCastException ignored) {
+            c = getGenericClass(clazz, index);
+            return c;
+        } catch (Exception e) {
+            return defaultType;
         }
+    }
+
+    public static Type[] getGenericTypes(Class<?> clazz) {
+        Type[] type = GENERIC_TYPES_CACHE.get(clazz);
         if (type == null) {
-            for (Type genericInterface : clazz.getGenericInterfaces()) {
-                type = ((((ParameterizedType) genericInterface).getActualTypeArguments()));
+            try {
+                Type superClass = clazz.getGenericSuperclass();
+                type = ((ParameterizedType) superClass).getActualTypeArguments();
+            } catch (ClassCastException ignored) {
+            }
+            if (type == null) {
+                try {
+//            尽量兼容下,如果类之间实现接口并将泛型指定，而不是通过继承的方式，需要通过此逻辑获取
+                    for (Type genericInterface : clazz.getGenericInterfaces()) {
+                        System.out.println(genericInterface);
+                        type = ArrayUtils.addAll(type, ((((ParameterizedType) genericInterface).getActualTypeArguments())));
+                    }
+                } catch (ClassCastException ignored) {
+
+                }
             }
         }
+        if (type == null) type = new Type[]{};
+        GENERIC_TYPES_CACHE.put(clazz, type);
         return type;
     }
+
 }
