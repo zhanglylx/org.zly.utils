@@ -1,6 +1,7 @@
 package org.zly.utils.random;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.zly.utils.DoubleOperationUtils;
 
 import java.math.BigDecimal;
@@ -71,7 +72,6 @@ public class ZlyRandNumberUtils {
         int step = 10000;
         int finalMin = min;
         int finalMax = finalMin + step;
-
         while (finalMin != max) {
             if (finalMax > max) finalMax = max;
             threadPoolExecutor.execute(new RandomNumberList(finalMin, finalMax, list));
@@ -155,6 +155,7 @@ public class ZlyRandNumberUtils {
      */
     public static BigDecimal nextBigDecimal(int minPlaceValue, int maxPlaceValue, int scale, boolean mantissaIsZero) {
         if (scale < 0) throw new IllegalArgumentException("scale不能小于0,实际为:" + scale);
+        int index = 0;
         while (true) {
             double random = scale == 0 ? 0 : Math.random();
             BigDecimal randomBig = BigDecimal.valueOf(random).setScale(scale, RoundingMode.DOWN);
@@ -184,6 +185,9 @@ public class ZlyRandNumberUtils {
             } else {
                 return randomBig;
             }
+//            快速失败机制，防止系统bug造成死循环,出现bug后联系作者修复
+            if (index++ > 100)
+                throw new RuntimeException("系统出现bug,请联系作者:" + StringUtils.join(new Object[]{minPlaceValue, maxPlaceValue, scale, mantissaIsZero}, ","));
         }
     }
 
