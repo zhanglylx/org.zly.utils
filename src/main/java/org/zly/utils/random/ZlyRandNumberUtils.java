@@ -30,8 +30,9 @@ public class ZlyRandNumberUtils {
             return -ZlyRandNumberUtils.nextLong(-min, -max);
         }
         if (min < 0) {
-            if (RandomUtils.nextBoolean()) {
-                return ~RandomUtils.nextLong(0, -min + 1);
+            int startNumber = max == 0 ? 1 : 0;
+            if (RandomUtils.nextBoolean() || max == 0) {
+                return -RandomUtils.nextLong(startNumber, -min + 1);
             } else {
                 return RandomUtils.nextLong(0, max);
             }
@@ -153,9 +154,10 @@ public class ZlyRandNumberUtils {
      * @return 整数位+小数位随机后的值
      */
     public static BigDecimal nextBigDecimal(int minPlaceValue, int maxPlaceValue, int scale, boolean mantissaIsZero) {
+        if (scale < 0) throw new IllegalArgumentException("scale不能小于0,实际为:" + scale);
         while (true) {
-            double random = Math.random();
-            BigDecimal randomBig = BigDecimal.valueOf(random).setScale(scale, RoundingMode.HALF_UP);
+            double random = scale == 0 ? 0 : Math.random();
+            BigDecimal randomBig = BigDecimal.valueOf(random).setScale(scale, RoundingMode.DOWN);
             int cardinality = 16;//基数，Math.random()返回的小数点长度
 //            大于16位代表需要增长小数位
 //            计算方法，如:  10/0.1=0.01，按照此列计算，
@@ -176,6 +178,7 @@ public class ZlyRandNumberUtils {
             }
             randomBig = randomBig.add(BigDecimal.valueOf(ZlyRandNumberUtils.nextLong(minPlaceValue, maxPlaceValue)));
             if (!mantissaIsZero) {
+                if (scale == 0) return randomBig;
                 String number = randomBig.toString();
                 if (!number.endsWith("0")) return randomBig;
             } else {
