@@ -1,12 +1,8 @@
 package org.zly.utils.random;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -112,7 +108,6 @@ public class ZlyRandomCharacterUtils {
         return stringBuilder.toString();
     }
 
-
     /**
      * 获取随机的特殊字符
      *
@@ -147,7 +142,7 @@ public class ZlyRandomCharacterUtils {
 //        long two = (long) Math.pow(10, 9);
         while (s.size() < number) {
 //            s.add(first + (ZlySetUtils.nextValue(3, 5, 6, 7, 8, 9) * two) + nextLongLenth(9));
-            s.add("1" + ZlyRandomSetUtils.nextValue(3, 5, 6, 7, 8, 9) + ZlyRandNumberUtils.nextLongLenth(9));
+            s.add("1" + ZlyRandomSetUtils.nextValue(new Integer[]{3, 5, 6, 7, 8, 9}) + ZlyRandNumberUtils.nextLongLenth(9));
         }
         return new ArrayList<>(s);
     }
@@ -163,6 +158,7 @@ class SpecialHandler implements RandomHandler<String> {
         return String.valueOf(CHARS[ZlyRandNumberUtils.nextInt(0, CHARS.length)]);
     }
 }
+
 
 class EnglishHandler implements RandomHandler<String> {
 

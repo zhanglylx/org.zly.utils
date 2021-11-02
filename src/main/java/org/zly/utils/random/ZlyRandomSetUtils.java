@@ -20,8 +20,8 @@ public class ZlyRandomSetUtils {
         return ZlyRandNumberUtils.nextInt(0, list.size());
     }
 
-    @SafeVarargs
-    public static <T> Integer nextIndex(T... o) {
+//    @SafeVarargs
+    public static <T> Integer nextIndex(T[] o) {
         return ZlyRandNumberUtils.nextInt(0, o.length);
     }
 
@@ -40,12 +40,11 @@ public class ZlyRandomSetUtils {
     }
 
 
-    @SafeVarargs
-    public static <O> O nextValue(O... t) {
+    public static <O> O nextValue(O[] t) {
         return t[nextIndex(t)];
     }
 
-    public static <T> T nextExclude(T t, T... ts) {
+    public static <T> T nextExclude(T t, T[] ts) {
         ts = ArrayUtils.removeAllOccurrences(ts, t);
         return ZlyRandomSetUtils.nextValue(ts);
     }
