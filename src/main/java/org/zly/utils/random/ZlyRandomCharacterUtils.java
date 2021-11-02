@@ -1,6 +1,7 @@
 package org.zly.utils.random;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.zly.utils.random.character.CharType;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -149,71 +150,12 @@ public class ZlyRandomCharacterUtils {
 
 }
 
-class SpecialHandler implements RandomHandler<String> {
-
-    private final static char[] CHARS = ("`~!@#$%^&*()_-+=/*,.<>][{}\\|/?;:'\"").toCharArray();
-
-    @Override
-    public String nextRandom() {
-        return String.valueOf(CHARS[ZlyRandNumberUtils.nextInt(0, CHARS.length)]);
-    }
-}
 
 
-class EnglishHandler implements RandomHandler<String> {
 
-    @Override
-    public String nextRandom() {
-        String str;
-        str = (char) (Math.random() * 26 + 'A') + "";
-        if (ZlyRandNumberUtils.nextInt(0, 2) == 0) str = str.toLowerCase();
-        return str;
-    }
-}
 
-class ChineseHandler implements RandomHandler<String> {
 
-    @Override
-    public String nextRandom() {
-        int hightPos, lowPos; // 定义高低位
-        Random random = new Random();
-        hightPos = (176 + Math.abs(random.nextInt(39)));// 获取高位值
-        lowPos = (161 + Math.abs(random.nextInt(93)));// 获取低位值
-        byte[] b = new byte[2];
-        b[0] = (new Integer(hightPos).byteValue());
-        b[1] = (new Integer(lowPos).byteValue());
-        try {
-            return new String(b, "GBK");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
 
-class NumberHandler implements RandomHandler<String> {
 
-    @Override
-    public String nextRandom() {
-        return String.valueOf(ZlyRandNumberUtils.nextInt(10));
-    }
-}
 
-enum CharType {
-    CHINESE(new ChineseHandler()),
-    ENGLISH(new EnglishHandler()),
-    NUMBER(new NumberHandler()),
-    SPECIAL(new SpecialHandler());
-    private final RandomHandler<String> randomHandler;
 
-    CharType(RandomHandler<String> randomHandler) {
-        this.randomHandler = randomHandler;
-    }
-
-    public RandomHandler<String> getRandomHandler() {
-        return randomHandler;
-    }
-
-    public String nextRandom() {
-        return this.randomHandler.nextRandom();
-    }
-}
