@@ -153,7 +153,7 @@ public class ZlyRandNumberUtils {
      * @param mantissaIsZero 尾数是否允许0，允许的话，随机出来的值的位数会小于指定位数
      * @return 整数位+小数位随机后的值
      */
-    public static BigDecimal nextBigDecimal(int minPlaceValue, int maxPlaceValue, int scale, boolean mantissaIsZero) {
+    public static BigDecimal nextBigDecimal(long minPlaceValue, long maxPlaceValue, int scale, boolean mantissaIsZero) {
         if (scale < 0) throw new IllegalArgumentException("scale不能小于0,实际为:" + scale);
         int index = 0;
         while (true) {
