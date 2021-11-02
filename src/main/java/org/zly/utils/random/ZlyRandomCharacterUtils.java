@@ -100,7 +100,8 @@ public class ZlyRandomCharacterUtils {
     }
 
     public static String nextMixture(int number, CharType... charType) {
-        if (charType == null || charType.length == 0) return "";
+        if (charType == null || charType.length == 0) throw new NullPointerException("charType不能为空");
+        if (number < 0) throw new IllegalArgumentException("number不能小于0");
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < number; i++) {
             stringBuilder.append(ZlyRandomSetUtils.nextValue(charType).nextRandom()
