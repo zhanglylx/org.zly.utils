@@ -35,6 +35,13 @@ public class ZlyRandomDate {
         return nextDate(standardDate, minDay, maxDay);
     }
 
+    public static Date nextDatePre(Date standardDate, int minDay, int maxDay) {
+        Objects.requireNonNull(standardDate);
+        if (minDay > 0) throw new IllegalArgumentException("minDay必须小于等于0");
+        if (maxDay > 0) throw new IllegalArgumentException("maxDay必须小于等于0");
+        return nextDate(standardDate, minDay, maxDay);
+    }
+
     public static Date nextDateRange(Date minDate, Date maxDate) {
         Objects.requireNonNull(maxDate);
         if (!minDate.before(maxDate) && !DateUtils.isSameDay(minDate, maxDate))
