@@ -1,12 +1,12 @@
 package org.zly.utils.random.character;
 
 import org.zly.utils.random.RandomHandler;
-import org.zly.utils.random.ZlyRandNumberUtils;
+import org.zly.utils.random.ZlyRandomNumberUtils;
 
 public class NumberHandler implements RandomHandler<String> {
 
     @Override
     public String nextRandom() {
-        return String.valueOf(ZlyRandNumberUtils.nextInt(10));
+        return String.valueOf(ZlyRandomNumberUtils.nextInt(10));
     }
 }

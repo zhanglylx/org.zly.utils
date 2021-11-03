@@ -1,7 +1,7 @@
 package org.zly.utils.random.character;
 
 import org.zly.utils.random.RandomHandler;
-import org.zly.utils.random.ZlyRandNumberUtils;
+import org.zly.utils.random.ZlyRandomNumberUtils;
 
 public class SpecialHandler implements RandomHandler<String> {
 
@@ -9,6 +9,6 @@ public class SpecialHandler implements RandomHandler<String> {
 
     @Override
     public String nextRandom() {
-        return String.valueOf(CHARS[ZlyRandNumberUtils.nextInt(0, CHARS.length)]);
+        return String.valueOf(CHARS[ZlyRandomNumberUtils.nextInt(0, CHARS.length)]);
     }
 }

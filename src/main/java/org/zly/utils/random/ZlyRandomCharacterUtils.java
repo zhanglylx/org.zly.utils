@@ -1,9 +1,8 @@
 package org.zly.utils.random;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.zly.utils.random.character.CharType;
+import org.zly.utils.random.character.CharRandomType;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,11 +38,11 @@ public class ZlyRandomCharacterUtils {
      * @return 返回指定长度的字符串，包含数字，字母，特殊字符
      */
     public static String nextPassword(int number) {
-        return nextMixture(number, CharType.NUMBER, CharType.ENGLISH, CharType.SPECIAL);
+        return nextMixture(number, CharRandomType.NUMBER, CharRandomType.ENGLISH, CharRandomType.SPECIAL);
     }
 
     public static String nextPassword(int min, int max) {
-        return nextPassword(ZlyRandNumberUtils.nextInt(min, max));
+        return nextPassword(ZlyRandomNumberUtils.nextInt(min, max));
     }
 
 
@@ -55,7 +54,7 @@ public class ZlyRandomCharacterUtils {
      * @return
      */
     public static String nextChinese(int min, int max) {
-        return nextChinese(ZlyRandNumberUtils.nextInt(min, max));
+        return nextChinese(ZlyRandomNumberUtils.nextInt(min, max));
     }
 
     /**
@@ -74,7 +73,7 @@ public class ZlyRandomCharacterUtils {
      * @return
      */
     public static String nextChinese(int number) {
-        return nextMixture(number, CharType.CHINESE);
+        return nextMixture(number, CharRandomType.CHINESE);
     }
 
     /**
@@ -87,24 +86,28 @@ public class ZlyRandomCharacterUtils {
     }
 
     public static String nextEnglish(int min, int max) {
-        return nextEnglish(ZlyRandNumberUtils.nextInt(min, max));
+        return nextEnglish(ZlyRandomNumberUtils.nextInt(min, max));
     }
 
     public static String nextEnglish(int number) {
-        return nextMixture(number, CharType.ENGLISH);
+        return nextMixture(number, CharRandomType.ENGLISH);
     }
 
 
-    public static String nextMixture(CharType... charType) {
-        return nextMixture(1, charType);
+    public static String nextMixture(CharRandomType... charRandomType) {
+        return nextMixture(1, charRandomType);
     }
 
-    public static String nextMixture(int number, CharType... charType) {
-        if (charType == null || charType.length == 0) throw new NullPointerException("charType不能为空");
+    public static String nextMixture(int min, int max, CharRandomType... charRandomType) {
+        return nextMixture(ZlyRandomNumberUtils.nextInt(min, max), charRandomType);
+    }
+
+    public static String nextMixture(int number, CharRandomType... charRandomType) {
+        if (charRandomType == null || charRandomType.length == 0) throw new NullPointerException("charType不能为空");
         if (number < 0) throw new IllegalArgumentException("number不能小于0");
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < number; i++) {
-            stringBuilder.append(ZlyRandomSetUtils.nextValue(charType).nextRandom()
+            stringBuilder.append(ZlyRandomSetUtils.nextValue(charRandomType).nextRandom()
             );
         }
         return stringBuilder.toString();
@@ -116,7 +119,7 @@ public class ZlyRandomCharacterUtils {
      * @return 只返回为英文的特殊字符
      */
     public static String nextSpecialCharacter() {
-        return nextMixture(CharType.SPECIAL);
+        return nextMixture(CharRandomType.SPECIAL);
     }
 
 
@@ -126,10 +129,10 @@ public class ZlyRandomCharacterUtils {
 
     public static String nextIpAddress() {
         return
-                ZlyRandNumberUtils.nextInt(10, 1000)
-                        + "." + ZlyRandNumberUtils.nextInt(1, 1000)
-                        + "." + ZlyRandNumberUtils.nextInt(1, 1000)
-                        + "." + ZlyRandNumberUtils.nextInt(1, 1000)
+                ZlyRandomNumberUtils.nextInt(10, 1000)
+                        + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
+                        + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
+                        + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
                 ;
     }
 
@@ -144,7 +147,7 @@ public class ZlyRandomCharacterUtils {
 //        long two = (long) Math.pow(10, 9);
         while (s.size() < number) {
 //            s.add(first + (ZlySetUtils.nextValue(3, 5, 6, 7, 8, 9) * two) + nextLongLenth(9));
-            s.add("1" + ZlyRandomSetUtils.nextValue(new Integer[]{3, 5, 6, 7, 8, 9}) + ZlyRandNumberUtils.nextLongLenth(9));
+            s.add("1" + ZlyRandomSetUtils.nextValue(new Integer[]{3, 5, 6, 7, 8, 9}) + ZlyRandomNumberUtils.nextLongLenth(9));
         }
         return new ArrayList<>(s);
     }
