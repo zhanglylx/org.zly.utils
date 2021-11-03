@@ -1,7 +1,7 @@
 package org.zly.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zly.utils.random.ZlyRandNumberUtils;
+import org.zly.utils.random.ZlyRandomNumberUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,8 +103,8 @@ public class ZLYStringUtils {
         int firstIndex = assignVersion.indexOf(".");
         int firstNumber = Integer.parseInt(assignVersion.substring(0, firstIndex));
         int n1;
-        int n2 = ZlyRandNumberUtils.nextInt(0, 30);
-        int n3 = ZlyRandNumberUtils.nextInt(0, 30);
+        int n2 = ZlyRandomNumberUtils.nextInt(0, 30);
+        int n3 = ZlyRandomNumberUtils.nextInt(0, 30);
         if (currentSmall) {
             if (firstNumber < 2) {
                 n1 = firstNumber;
@@ -115,16 +115,16 @@ public class ZLYStringUtils {
                     if (n3 < 1) {
                         throw new IllegalArgumentException("不能再小的版本:" + assignVersion);
                     } else {
-                        n3 = ZlyRandNumberUtils.nextInt(0, n3);
+                        n3 = ZlyRandomNumberUtils.nextInt(0, n3);
                     }
                 } else {
-                    n2 = ZlyRandNumberUtils.nextInt(0, n2);
+                    n2 = ZlyRandomNumberUtils.nextInt(0, n2);
                 }
             } else {
-                n1 = ZlyRandNumberUtils.nextInt(1, firstNumber);
+                n1 = ZlyRandomNumberUtils.nextInt(1, firstNumber);
             }
         } else {
-            n1 = ZlyRandNumberUtils.nextInt(firstNumber + ZlyRandNumberUtils.nextInt(5, 10), firstNumber + ZlyRandNumberUtils.nextInt(10, 20));
+            n1 = ZlyRandomNumberUtils.nextInt(firstNumber + ZlyRandomNumberUtils.nextInt(5, 10), firstNumber + ZlyRandomNumberUtils.nextInt(10, 20));
         }
 
         return n1

@@ -2,16 +2,14 @@ package org.zly.utils.random;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.zly.utils.DoubleOperationUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class ZlyRandNumberUtils {
+public class ZlyRandomNumberUtils {
     /**
      * 获取随机数,包前不包后
      *
@@ -22,13 +20,14 @@ public class ZlyRandNumberUtils {
 
     public static int nextInt(int min, int max) {
         if (min > max) throw new IllegalArgumentException("min > max: min=" + min + " max=" + max);
-        return new SecureRandom().nextInt(max) % (max - min) + min;
+//        return new SecureRandom().nextInt(max) % (max - min) + min;
+        return (int) nextLong(min, max);
     }
 
     public static long nextLong(long min, long max) {
         if (min > max) throw new IllegalArgumentException("min > max: min=" + min + " max=" + max);
         if (min < 0 && max < 0) {
-            return -ZlyRandNumberUtils.nextLong(-min, -max);
+            return -ZlyRandomNumberUtils.nextLong(-min, -max);
         }
         if (min < 0) {
             int startNumber = max == 0 ? 1 : 0;
@@ -177,7 +176,7 @@ public class ZlyRandNumberUtils {
                     randomBig = randomBig.add(divide);
                 }
             }
-            randomBig = randomBig.add(BigDecimal.valueOf(ZlyRandNumberUtils.nextLong(minPlaceValue, maxPlaceValue)));
+            randomBig = randomBig.add(BigDecimal.valueOf(ZlyRandomNumberUtils.nextLong(minPlaceValue, maxPlaceValue)));
             if (!mantissaIsZero) {
                 if (scale == 0) return randomBig;
                 String number = randomBig.toString();
