@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
-public class ZlyRandomDate {
+public class ZlyRandomDateUtils {
 
     /**
      * 随机获取一个日期
