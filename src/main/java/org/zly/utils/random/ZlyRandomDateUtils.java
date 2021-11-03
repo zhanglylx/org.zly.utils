@@ -19,7 +19,7 @@ public class ZlyRandomDateUtils {
      * @param maxDay
      * @return
      */
-    public static Date nextDate(Date standardDate, int minDay, int maxDay) {
+    public static Date nextDay(Date standardDate, int minDay, int maxDay) {
         return plusDays(standardDate, ZlyRandomNumberUtils.nextInt(minDay, maxDay));
     }
 
@@ -28,21 +28,21 @@ public class ZlyRandomDateUtils {
         return new DateTime(standardDate).plusDays(day).toDate();
     }
 
-    public static Date nextDatePost(Date standardDate, int minDay, int maxDay) {
+    public static Date nextDayPost(Date standardDate, int minDay, int maxDay) {
         Objects.requireNonNull(standardDate);
         if (minDay < 0) throw new IllegalArgumentException("minDay必须大于等于0");
         if (maxDay < 0) throw new IllegalArgumentException("maxDay必须大于等于0");
-        return nextDate(standardDate, minDay, maxDay);
+        return nextDay(standardDate, minDay, maxDay);
     }
 
-    public static Date nextDatePre(Date standardDate, int minDay, int maxDay) {
+    public static Date nextDayPre(Date standardDate, int minDay, int maxDay) {
         Objects.requireNonNull(standardDate);
         if (minDay > 0) throw new IllegalArgumentException("minDay必须小于等于0");
         if (maxDay > 0) throw new IllegalArgumentException("maxDay必须小于等于0");
-        return nextDate(standardDate, minDay, maxDay);
+        return nextDay(standardDate, minDay, maxDay);
     }
 
-    public static Date nextDateRange(Date minDate, Date maxDate) {
+    public static Date nextDayRange(Date minDate, Date maxDate) {
         Objects.requireNonNull(maxDate);
         if (!minDate.before(maxDate) && !DateUtils.isSameDay(minDate, maxDate))
             throw new IllegalArgumentException("maxDate必须大于等于minDate");
