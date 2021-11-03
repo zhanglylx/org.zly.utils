@@ -20,10 +20,10 @@ public class ZlyRandomDateUtils {
      * @return
      */
     public static Date nextDate(Date standardDate, int minDay, int maxDay) {
-        return nextDate(standardDate, ZlyRandomNumberUtils.nextInt(minDay, maxDay));
+        return plusDays(standardDate, ZlyRandomNumberUtils.nextInt(minDay, maxDay));
     }
 
-    public static Date nextDate(Date standardDate, int day) {
+    public static Date plusDays(Date standardDate, int day) {
         Objects.requireNonNull(standardDate);
         return new DateTime(standardDate).plusDays(day).toDate();
     }
@@ -47,7 +47,7 @@ public class ZlyRandomDateUtils {
         if (!minDate.before(maxDate) && !DateUtils.isSameDay(minDate, maxDate))
             throw new IllegalArgumentException("maxDate必须大于等于minDate");
         int day = (int) ZlyDateUtils.getDayDiff(minDate, maxDate);
-        return nextDate(minDate, day);
+        return plusDays(minDate, day);
     }
 
 }
