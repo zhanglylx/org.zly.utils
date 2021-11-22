@@ -1,7 +1,10 @@
 package org.zly.utils.random;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.zly.utils.random.character.CharRandomType;
+import org.zly.utils.random.character.EmojiHandler;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -30,7 +33,7 @@ public class ZlyRandomCharacterUtils {
         for (AtomicLong atomicLong : NEXT_STRING_UNIQUE_KEY_ARRAY) {
             key.append(atomicLong.incrementAndGet());
         }
-        return nextUUID() + key;
+        return key + nextUUID();
     }
 
     /**
@@ -102,13 +105,57 @@ public class ZlyRandomCharacterUtils {
         return nextMixture(ZlyRandomNumberUtils.nextInt(min, max), charRandomType);
     }
 
+    public static void main(String[] args) {
+        System.out.println(test(1D));
+        System.out.println(test(9999.99));
+
+        System.out.println(test(10000D));
+        System.out.println(test(19999.99));
+
+        System.out.println(test(20000.00));
+        System.out.println(test(50000.00));
+        System.out.println(test(99999.99));
+
+        System.out.println(test(100000.00));
+        System.out.println(test(1100000.00));
+
+        System.out.println(DateUtils.isSameInstant(new Date(),new Date()));
+        System.out.println(nextMixture(5000));
+        System.out.println("\n".length());
+    }
+
+
+    public static Integer test(Double val) {
+        Integer type = null;
+        if (val < 10000) {
+            type = 1;
+        } else if (val < 20000) {
+            type = 2;
+        } else if (val < 100000) {
+            type = 3;
+        } else if (val >= 100000) {
+            type = 4;
+        }
+        return type;
+    }
+
     public static String nextMixture(int number, CharRandomType... charRandomType) {
-        if (charRandomType == null || charRandomType.length == 0) throw new NullPointerException("charType不能为空");
+        if (charRandomType == null || charRandomType.length == 0) charRandomType = CharRandomType.values();
         if (number < 0) throw new IllegalArgumentException("number不能小于0");
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < number; i++) {
-            stringBuilder.append(ZlyRandomSetUtils.nextValue(charRandomType).nextRandom()
-            );
+        CharRandomType randomType;
+        while (stringBuilder.length() != number) {
+            randomType = ZlyRandomSetUtils.nextValue(charRandomType);
+            while (true) {
+                if (randomType.size() > number - stringBuilder.length()) {
+                    if (charRandomType.length == 1) throw new IllegalArgumentException("剩余空间不支持填充大小");
+                    charRandomType = ArrayUtils.removeElement(charRandomType, randomType);
+                    randomType = ZlyRandomSetUtils.nextExclude(randomType, charRandomType);
+                } else {
+                    break;
+                }
+            }
+            stringBuilder.append(randomType.nextRandom());
         }
         return stringBuilder.toString();
     }
