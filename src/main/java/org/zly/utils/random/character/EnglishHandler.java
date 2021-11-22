@@ -6,7 +6,7 @@ import org.zly.utils.random.ZlyRandomNumberUtils;
 public class EnglishHandler implements RandomHandler<String> {
 
     @Override
-    public String nextRandom() {
+    public String nextRandom(long size,long sizeOfRemainingSpace) {
         String str;
         str = (char) (Math.random() * 26 + 'A') + "";
         if (ZlyRandomNumberUtils.nextInt(0, 2) == 0) str = str.toLowerCase();

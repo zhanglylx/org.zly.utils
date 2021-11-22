@@ -106,22 +106,7 @@ public class ZlyRandomCharacterUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(test(1D));
-        System.out.println(test(9999.99));
-
-        System.out.println(test(10000D));
-        System.out.println(test(19999.99));
-
-        System.out.println(test(20000.00));
-        System.out.println(test(50000.00));
-        System.out.println(test(99999.99));
-
-        System.out.println(test(100000.00));
-        System.out.println(test(1100000.00));
-
-        System.out.println(DateUtils.isSameInstant(new Date(),new Date()));
-        System.out.println(nextMixture(5000));
-        System.out.println("\n".length());
+        System.out.println(nextMixture(1,CharRandomType.SPECIAL));
     }
 
 
@@ -141,13 +126,14 @@ public class ZlyRandomCharacterUtils {
 
     public static String nextMixture(int number, CharRandomType... charRandomType) {
         if (charRandomType == null || charRandomType.length == 0) charRandomType = CharRandomType.values();
-        if (number < 0) throw new IllegalArgumentException("number不能小于0");
+        if (number < 1) throw new IllegalArgumentException("number不能小于1");
         StringBuilder stringBuilder = new StringBuilder();
         CharRandomType randomType;
         while (stringBuilder.length() != number) {
             randomType = ZlyRandomSetUtils.nextValue(charRandomType);
+            long roomSize =  number - stringBuilder.length();
             while (true) {
-                if (randomType.size() > number - stringBuilder.length()) {
+                if (randomType.size() > roomSize) {
                     if (charRandomType.length == 1) throw new IllegalArgumentException("剩余空间不支持填充大小");
                     charRandomType = ArrayUtils.removeElement(charRandomType, randomType);
                     randomType = ZlyRandomSetUtils.nextExclude(randomType, charRandomType);
@@ -155,7 +141,7 @@ public class ZlyRandomCharacterUtils {
                     break;
                 }
             }
-            stringBuilder.append(randomType.nextRandom());
+            stringBuilder.append(randomType.nextRandom(number,roomSize));
         }
         return stringBuilder.toString();
     }

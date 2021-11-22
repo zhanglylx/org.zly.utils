@@ -29,7 +29,7 @@ public class EmojiHandler implements RandomHandler<String> {
      * @return
      */
     @Override
-    public String nextRandom() {
+    public String nextRandom(long size,long  sizeOfRemainingSpace) {
         return ZlyRandomSetUtils.nextValue(EMOJI_LISTS);
     }
 
