@@ -1,12 +1,13 @@
 package org.zly.utils.random.character;
 
+import lombok.Data;
 import org.apache.commons.lang3.ArrayUtils;
 import org.zly.utils.random.RandomHandler;
 import org.zly.utils.random.ZlyRandomSetUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Data
 public class EmojiHandler implements RandomHandler<String> {
     private static final String[] EMOJI_LISTS = new String[6];
 

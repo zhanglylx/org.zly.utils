@@ -105,24 +105,23 @@ public class ZlyRandomCharacterUtils {
         return nextMixture(ZlyRandomNumberUtils.nextInt(min, max), charRandomType);
     }
 
-    public static void main(String[] args) {
-        System.out.println(nextMixture(1,CharRandomType.SPECIAL));
-    }
+//    public static Integer test(Double val) {
+//        Integer type = null;
+//        if (val < 10000) {
+//            type = 1;
+//        } else if (val < 20000) {
+//            type = 2;
+//        } else if (val < 100000) {
+//            type = 3;
+//        } else if (val >= 100000) {
+//            type = 4;
+//        }
+//        return type;
+//    }
 
-
-    public static Integer test(Double val) {
-        Integer type = null;
-        if (val < 10000) {
-            type = 1;
-        } else if (val < 20000) {
-            type = 2;
-        } else if (val < 100000) {
-            type = 3;
-        } else if (val >= 100000) {
-            type = 4;
-        }
-        return type;
-    }
+//    public static String nextMixture(int i, int number, CharRandomType... charRandomTypes) {
+//
+//    }
 
     public static String nextMixture(int number, CharRandomType... charRandomType) {
         if (charRandomType == null || charRandomType.length == 0) charRandomType = CharRandomType.values();
@@ -131,17 +130,13 @@ public class ZlyRandomCharacterUtils {
         CharRandomType randomType;
         while (stringBuilder.length() != number) {
             randomType = ZlyRandomSetUtils.nextValue(charRandomType);
-            long roomSize =  number - stringBuilder.length();
-            while (true) {
-                if (randomType.size() > roomSize) {
-                    if (charRandomType.length == 1) throw new IllegalArgumentException("剩余空间不支持填充大小");
-                    charRandomType = ArrayUtils.removeElement(charRandomType, randomType);
-                    randomType = ZlyRandomSetUtils.nextExclude(randomType, charRandomType);
-                } else {
-                    break;
-                }
+            long roomSize = number - stringBuilder.length();
+            if (randomType.size() > roomSize) {
+                charRandomType = ArrayUtils.removeElement(charRandomType, randomType);
+                if (charRandomType.length == 0) throw new IllegalArgumentException("剩余空间不支持填充大小");
+                continue;
             }
-            stringBuilder.append(randomType.nextRandom(number,roomSize));
+            stringBuilder.append(randomType.nextRandom(number, roomSize));
         }
         return stringBuilder.toString();
     }
@@ -168,6 +163,8 @@ public class ZlyRandomCharacterUtils {
                         + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
                 ;
     }
+
+    private static final Set<String> PHONE_HISTORY = new HashSet<>();
 
     public static String nextRandomPhone() {
         return nextRandomPhone(1).get(0);

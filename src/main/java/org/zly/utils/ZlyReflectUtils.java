@@ -4,6 +4,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -66,7 +68,6 @@ public class ZlyReflectUtils {
     }
 
 
-
     /**
      * 获取class中属性的公共方法
      *
@@ -95,7 +96,15 @@ public class ZlyReflectUtils {
     }
 
     public static Class<?> getGenericClass(Class<?> clazz, int index) {
-        return (Class<?>) (getGenericTypes(clazz)[index]);
+        Type type = (getGenericTypes(clazz)[index]);
+        try {
+            return (Class<?>) (getGenericTypes(clazz)[index]);
+        } catch (ClassCastException e) {
+            if (type instanceof ParameterizedTypeImpl) {
+                return ((ParameterizedTypeImpl)type).getRawType();
+            }
+        }
+        return (Class<?>) type;
     }
 
     public static Class<?> getGenericClass(Class<?> clazz, int index, Class<?> defaultType) {
@@ -120,7 +129,6 @@ public class ZlyReflectUtils {
                 try {
 //            尽量兼容下,如果类之间实现接口并将泛型指定，而不是通过继承的方式，需要通过此逻辑获取
                     for (Type genericInterface : clazz.getGenericInterfaces()) {
-                        System.out.println(genericInterface);
                         type = ArrayUtils.addAll(type, ((((ParameterizedType) genericInterface).getActualTypeArguments())));
                     }
                 } catch (ClassCastException ignored) {

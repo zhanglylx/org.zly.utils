@@ -47,7 +47,11 @@ public class ZlyRandomDateUtils {
         if (!minDate.before(maxDate) && !DateUtils.isSameDay(minDate, maxDate))
             throw new IllegalArgumentException("maxDate必须大于等于minDate");
         int day = (int) ZlyDateUtils.getDayDiff(minDate, maxDate);
-        return plusDays(minDate, day);
+        return nextDayPost(minDate, 0, day);
+    }
+
+    public static Date nextBirth() {
+        return nextDayRange(new DateTime("1910-01-01").toDate(), new Date());
     }
 
 }

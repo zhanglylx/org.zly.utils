@@ -1,14 +1,16 @@
 package org.zly.utils.random.character;
 
+import lombok.Data;
 import org.zly.utils.random.RandomHandler;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
-
+@Data
 public class ChineseHandler implements RandomHandler<String> {
 
     @Override
-    public String nextRandom(long size,long  sizeOfRemainingSpace) {
+    public String nextRandom(long size, long sizeOfRemainingSpace) {
         int hightPos, lowPos; // 定义高低位
         Random random = new Random();
         hightPos = (176 + Math.abs(random.nextInt(39)));// 获取高位值
@@ -21,5 +23,7 @@ public class ChineseHandler implements RandomHandler<String> {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+
     }
+
 }

@@ -24,8 +24,7 @@ public abstract class ObjectBodyTypeImpl<R> extends AbstractBodyType<R> {
 
     @Override
     public R getHandler(Map<String, Object> map) {
-        return new JSONObjectBodyTypeImpl(this.templateClass).getHandler(map).toJavaObject((Class<R>) (ZlyReflectUtils.getGenericClass(this.getClass())));
+        return new JSONObjectBodyTypeImpl(this.templateClass).getHandler(map).toJavaObject((Class<R>) (ZlyReflectUtils.getGenericClass(this.getClass(),0,Object.class)));
     }
-
 
 }

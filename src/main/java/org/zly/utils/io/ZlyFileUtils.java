@@ -1,13 +1,11 @@
 package org.zly.utils.io;
 
+import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -142,20 +140,23 @@ public class ZlyFileUtils {
      * @throws IOException in the case of I/O errors
      * @since 5.0
      */
-    public static void traversalFolderFile(@Nullable Path root, final Consumer<File> fileConsumer) throws IOException {
+//    运行期间会存在系统目录权限问题，弃用
+    public static void traversalFolderFile(@Nullable Path root, final SimpleFileVisitor<Path> simpleFileVisitor) throws IOException {
         Objects.requireNonNull(root);
         if (!Files.exists(root)) {
             throw new IllegalArgumentException("文件路径不存在:" + root);
         }
-        Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                fileConsumer.accept(file.toFile());
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        Files.walkFileTree(root, simpleFileVisitor);
     }
 
+
+    public static class SimpleFileVisitorDefault<T> extends SimpleFileVisitor<T> {
+        @Override
+        public FileVisitResult visitFileFailed(T file, IOException exc) throws IOException {
+            if (exc instanceof AccessDeniedException) return FileVisitResult.CONTINUE;
+            return super.visitFileFailed(file, exc);
+        }
+    }
 
     /**
      * Recursively copy the contents of the {@code src} file/directory
@@ -235,5 +236,7 @@ public class ZlyFileUtils {
         }
         return fileName;
     }
+
+
 
 }

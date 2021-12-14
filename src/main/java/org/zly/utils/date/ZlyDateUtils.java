@@ -25,10 +25,6 @@ public class ZlyDateUtils {
         return sdf.format(date);
     }
 
-    public static void main(String[] args) {
-        System.out.println(getStrSysDefaultFormat());
-        DateTime.parse(getStrSysDefaultFormat());
-    }
 
     public static Date getDateFormat(String time, String format) {
         return getDateConversion(time, format);
@@ -157,20 +153,38 @@ public class ZlyDateUtils {
 
 
     /**
-     * 两个时间相差几天
+     * 两个时间相差多少天
      *
      * @param smdate
      * @param bdate
      * @return
      */
     public static long getDayDiff(Date smdate, Date bdate) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(smdate);
-        long time1 = cal.getTimeInMillis();
-        cal.setTime(bdate);
-        long time2 = cal.getTimeInMillis();
-        return (time2 - time1) / DateUtils.MILLIS_PER_DAY;
+        long bDay = bdate.getTime() / DateUtils.MILLIS_PER_DAY;
+        long aDay = smdate.getTime() / DateUtils.MILLIS_PER_DAY;
+        return bDay-aDay;
     }
+
+    public static void main(String[] args) {
+        final DateTime date1 =  new DateTime(setZeroTime(new Date()));
+        final DateTime dateTime = DateTime.now().plusSeconds(-1);
+        System.out.println(date1);
+        System.out.println(dateTime);
+        System.out.println(getDayDiff(date1.toDate(),dateTime.toDate()));
+    }
+    /**
+     * 设置零时
+     *
+     * @return
+     */
+    public static Date setZeroTime(Date date) {
+        return new Date(date.getTime() / (1000 * 3600 * 24) * (1000 * 3600 * 24) - TimeZone.getDefault().getRawOffset());
+    }
+
+//    long current=System.currentTimeMillis();//当前时间毫秒数
+//    long zero=current/(1000*3600*24)*(1000*3600*24)-TimeZone.getDefault().getRawOffset();//今天零点零分零秒的毫秒数
+//    long twelve=zero+24*60*60*1000-1;//今天23点59分59秒的毫秒数
+//    long yesterday=System.currentTimeMillis()-24*60*60*1000;//昨天的这一时间的毫秒数
 
     /**
      * 返回两个时间的相差分钟数
