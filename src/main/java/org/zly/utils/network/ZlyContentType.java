@@ -8,18 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ZlyContentType {
-    public static final String CONTENT_TYPE = "Content-Type";
-    public static final String APPLICATION_JSON_VALUE = "application/json;charset=utf-8";
-    public static final String CONTENT_DISPOSITION = "Content-Disposition";
+    public static final String APPLICATION_JSON_VALUE = MediaType.APPLICATION_JSON_UTF8_VALUE ;
+    public static final String CONTENT_TYPE = HttpHeaders.CONTENT_TYPE;
+    public static final String CONTENT_DISPOSITION =HttpHeaders.CONTENT_DISPOSITION ;
     public static final String CONTENT_DISPOSITION_VALUE = "attchment;filename=%s";
 
     public static String contentDispositionValue(String filename) {
-        return String.format(CONTENT_DISPOSITION_VALUE, filename);
+        return String.format(CONTENT_DISPOSITION_VALUE, ZlyHttpUtils.getUrlEncoder(filename));
     }
 
     public static void downloadMultipartHeader(HttpServletResponse httpServletResponse, String fileName) {
-        httpServletResponse.setContentType(MediaType.MULTIPART_FORM_DATA_VALUE);
-        httpServletResponse.setHeader(CONTENT_DISPOSITION, contentDispositionValue(fileName));
+        final Map<String, String> stringStringMap = downloadMultipartHeader(fileName);
+        httpServletResponse.setContentType(stringStringMap.get(CONTENT_TYPE));
+        httpServletResponse.setHeader(CONTENT_DISPOSITION, stringStringMap.get(CONTENT_DISPOSITION));
     }
 
     public static void downloadMultipartHeader(HttpHeaders header, String fileName) {

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -211,7 +212,7 @@ public class ZlyExcelUtils {
     @SuppressWarnings("unchecked")
     public static Map<Integer, Map<String, String>> getExcelXlsx(InputStream inputStream, int sheetNum) {
 
-      return   useXlsxWorkbook(inputStream,  new Function<Workbook, Map<Integer, Map<String, String>>>() {
+        return useXlsxWorkbook(inputStream, new Function<Workbook, Map<Integer, Map<String, String>>>() {
             @Override
             public Map<Integer, Map<String, String>> apply(Workbook workbook) {
                 Map<Integer, Map<String, String>> rowMap = new LinkedHashMap<>();//所有行的总值
@@ -235,7 +236,7 @@ public class ZlyExcelUtils {
                     }
                     rowMap.put(rowIndex - 1, valuesMap);
                 }
-              return rowMap;
+                return rowMap;
             }
         });
     }
@@ -247,6 +248,39 @@ public class ZlyExcelUtils {
 //        如果是无法解析的CellType，使用CellType.valueOf将会报错，告知使用者
         if (cell != null) CellType.valueOf(cell.getCellType().name());
         return cell == null ? "" : cell.toString();
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("hello word");
+        File aFile = new File("C:\\Users\\Administrator\\Desktop\\aaaa.xlsx");
+        File bFile = new File("C:\\Users\\Administrator\\Desktop\\bbbb.xlsx");
+        final Map<Integer, Map<String, String>> excelXlsxa = ZlyExcelUtils.getExcelXlsx(aFile);
+        final Map<Integer, Map<String, String>> excelXlsxb = ZlyExcelUtils.getExcelXlsx(bFile);
+        int i = 0;
+        for (Map.Entry<Integer, Map<String, String>> integerMapEntry : excelXlsxa.entrySet()) {
+            final Map.Entry<Integer, Map<String, String>> integerMapEntry1 = integerMapEntry;
+            final Map<String, String> stringStringMap = excelXlsxb.get(i);
+            int finalI = i;
+            Map<String, String> map = new LinkedHashMap<>();
+            integerMapEntry1.getValue().forEach(new BiConsumer<String, String>() {
+                @Override
+                public void accept(String s, String s2) {
+                    if (s.equals("李笑b")) {
+                        if (s2.equals(stringStringMap.get("连宇b"))) {
+                            map.put("这是匹配的行", "是");
+                        }
+                    } else {
+                        map.put("这是匹配的行", "否");
+                    }
+                }
+            });
+            excelXlsxa.get(i).putAll(stringStringMap);
+            excelXlsxa.get(i).putAll(map);
+            i++;
+        }
+        ZlyExcelUtils.createExcelFile(new File("C:\\Users\\Administrator\\Desktop\\CC.xlsx"), "李笑叫我弄的", excelXlsxa);
+
     }
 
 }

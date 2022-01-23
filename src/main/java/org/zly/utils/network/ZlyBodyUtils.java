@@ -33,6 +33,8 @@ public class ZlyBodyUtils {
         return bodyAutowired(clazz, "").isEmpty();
     }
 
+    private static final Object lock = new Object();
+
     /**
      * 通过反射查找带有@BodyAutowired 注解的方法，通过方法的参数名称和body传入biConsumer
      *
@@ -45,21 +47,26 @@ public class ZlyBodyUtils {
     public static void bodyAutowired(Class<?> clazz, BiConsumer<String, Object> biConsumer, Object... body) {
         List<String> parametersNames = BODY_AUTOWIRED_MAPS.get(clazz);
         if (parametersNames == null) {
-            parametersNames = new ArrayList<>();
-            for (Class<?> aClass : ZlyReflectUtils.getClassAlList(clazz)) {
-                for (Method method : aClass.getDeclaredMethods()) {
-                    BodyAutowired bodyAutowired = method.getAnnotation(BodyAutowired.class);
-                    if (bodyAutowired != null) {
-                        for (Parameter parameter : method.getParameters()) {
-                            if (!ArrayUtils.contains(bodyAutowired.excludeParameters(), parameter.getName())
-                                    && parameter.getAnnotation(BodyExclude.class) == null) {
-                                parametersNames.add(parameter.getName());
+            synchronized (lock) {
+                parametersNames = BODY_AUTOWIRED_MAPS.get(clazz);
+                if (parametersNames == null) {
+                    parametersNames = new ArrayList<>();
+                    for (Class<?> aClass : ZlyReflectUtils.getClassAlList(clazz)) {
+                        for (Method method : aClass.getDeclaredMethods()) {
+                            BodyAutowired bodyAutowired = method.getAnnotation(BodyAutowired.class);
+                            if (bodyAutowired != null) {
+                                for (Parameter parameter : method.getParameters()) {
+                                    if (!ArrayUtils.contains(bodyAutowired.excludeParameters(), parameter.getName())
+                                            && parameter.getAnnotation(BodyExclude.class) == null) {
+                                        parametersNames.add(parameter.getName());
+                                    }
+                                }
                             }
                         }
                     }
+                    BODY_AUTOWIRED_MAPS.put(clazz, parametersNames);
                 }
             }
-            BODY_AUTOWIRED_MAPS.put(clazz, parametersNames);
         }
         for (int i = 0; i < parametersNames.size(); i++) {
             if (body != null && body.length > i) {

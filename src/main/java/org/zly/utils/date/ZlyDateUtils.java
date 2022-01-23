@@ -11,6 +11,7 @@ import java.util.*;
 public class ZlyDateUtils {
     public final static String GENERAL_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public final static String YMDHMSS = "yyyyMMddHHmmssSS";
+    public final static String YMDHMS = "yyyyMMddHHmmss";
     public final static String YYMM = "yyyyMM";
     public final static String YYYY_MM_DD = "yyyy-MM-dd";
 

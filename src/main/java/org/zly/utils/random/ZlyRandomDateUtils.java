@@ -23,6 +23,17 @@ public class ZlyRandomDateUtils {
         return plusDays(standardDate, ZlyRandomNumberUtils.nextInt(minDay, maxDay));
     }
 
+    public static RandomDate nextDayRange(int minDay, int maxDay) {
+        return nextDayRange(new Date(), minDay, maxDay);
+    }
+
+    public static RandomDate nextDayRange(Date standardDate, int minDay, int maxDay) {
+        final RandomDate randomDate = new RandomDate();
+        randomDate.setStartDate(standardDate);
+        randomDate.setEndDate(nextDayPost(standardDate, minDay, maxDay));
+        return randomDate;
+    }
+
     public static Date plusDays(Date standardDate, int day) {
         Objects.requireNonNull(standardDate);
         return new DateTime(standardDate).plusDays(day).toDate();

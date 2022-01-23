@@ -73,6 +73,21 @@ public class ZLYStringUtils {
     }
 
     /**
+     * 检查字符串是否互相包含
+     *
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static boolean contains(String s1, String s2) {
+        if (s1.length() > s2.length()) {
+            return s1.contains(s2);
+        }
+        return s2.contains(s1);
+    }
+
+
+    /**
      * 字符串的相似度
      *
      * @param matching 匹配字符串
@@ -134,9 +149,6 @@ public class ZLYStringUtils {
                 + n3;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getNoAssignVersion("0.0.1", true));
-    }
 
     /**
      * 替换换行符

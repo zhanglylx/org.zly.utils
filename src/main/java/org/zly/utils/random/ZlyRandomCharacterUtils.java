@@ -1,39 +1,18 @@
 package org.zly.utils.random;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.zly.utils.random.character.CharRandomType;
-import org.zly.utils.random.character.EmojiHandler;
+import org.zly.utils.random.type.*;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 随机工具
  */
 public class ZlyRandomCharacterUtils {
 
-    private static final Object NEXT_STRING_UNIQUE_KEY_ARRAY_LOCK = new Object();
-    private static AtomicLong[] NEXT_STRING_UNIQUE_KEY_ARRAY = new AtomicLong[]{nextUniqueKey()};
-
-    private static AtomicLong nextUniqueKey() {
-        return new AtomicLong(System.currentTimeMillis());
-    }
-
     public static String nextString() {
-        if (NEXT_STRING_UNIQUE_KEY_ARRAY[NEXT_STRING_UNIQUE_KEY_ARRAY.length - 1].get() == Long.MAX_VALUE) {
-            synchronized (NEXT_STRING_UNIQUE_KEY_ARRAY_LOCK) {
-                if (NEXT_STRING_UNIQUE_KEY_ARRAY[NEXT_STRING_UNIQUE_KEY_ARRAY.length - 1].get() == Long.MAX_VALUE) {
-                    NEXT_STRING_UNIQUE_KEY_ARRAY = ArrayUtils.add(NEXT_STRING_UNIQUE_KEY_ARRAY, nextUniqueKey());
-                }
-            }
-        }
-        StringBuilder key = new StringBuilder();
-        for (AtomicLong atomicLong : NEXT_STRING_UNIQUE_KEY_ARRAY) {
-            key.append(atomicLong.incrementAndGet());
-        }
-        return key + nextUUID();
+        return ZlyRandomStrTypeCache.ONLY_STRING.nextRandom();
     }
 
     /**
@@ -41,7 +20,7 @@ public class ZlyRandomCharacterUtils {
      * @return 返回指定长度的字符串，包含数字，字母，特殊字符
      */
     public static String nextPassword(int number) {
-        return nextMixture(number, CharRandomType.NUMBER, CharRandomType.ENGLISH, CharRandomType.SPECIAL);
+        return ZlyRandomStrTypeCache.PASSWORD.nextRandom(number);
     }
 
     public static String nextPassword(int min, int max) {
@@ -152,19 +131,13 @@ public class ZlyRandomCharacterUtils {
 
 
     public static String nextUUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
+        return new ZlyRandomUUID().nextRandom();
     }
 
     public static String nextIpAddress() {
-        return
-                ZlyRandomNumberUtils.nextInt(10, 1000)
-                        + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
-                        + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
-                        + "." + ZlyRandomNumberUtils.nextInt(1, 1000)
-                ;
+        return ZlyRandomStrTypeCache.IP_ADDRESS.nextRandom();
     }
 
-    private static final Set<String> PHONE_HISTORY = new HashSet<>();
 
     public static String nextRandomPhone() {
         return nextRandomPhone(1).get(0);
@@ -172,15 +145,13 @@ public class ZlyRandomCharacterUtils {
 
 
     public static List<String> nextRandomPhone(int number) {
-        Set<String> s = new HashSet<>(number);
-//        long first = (long) Math.pow(10, 10);
-//        long two = (long) Math.pow(10, 9);
-        while (s.size() < number) {
-//            s.add(first + (ZlySetUtils.nextValue(3, 5, 6, 7, 8, 9) * two) + nextLongLenth(9));
-            s.add("1" + ZlyRandomSetUtils.nextValue(new Integer[]{3, 5, 6, 7, 8, 9}) + ZlyRandomNumberUtils.nextLongLenth(9));
-        }
-        return new ArrayList<>(s);
+        return ZlyRandomStrTypeCache.MOBILE_PHONE.nextRandoms(number);
     }
+
+    public static void main(String[] args) {
+        System.out.println(nextIpAddress());
+    }
+
 
 }
 

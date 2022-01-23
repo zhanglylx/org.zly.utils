@@ -1,7 +1,10 @@
 package org.zly.utils;
 
+import org.zly.utils.random.ZlyRandomNumberUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 
 /**
  * double类型运算
@@ -20,6 +23,28 @@ public class DoubleOperationUtils {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.add(b2).doubleValue();
+    }
+
+    /**
+     * 返回一个String的double,取消科学计数法
+     *
+     * @param d
+     * @param scale
+     * @return
+     */
+    public static String formatDouble(double d, int scale) {
+        NumberFormat nf = NumberFormat.getInstance();
+        //设置保留多少位小数
+        nf.setMaximumFractionDigits(scale);
+        // 取消科学计数法
+        nf.setGroupingUsed(false);
+        //返回结果
+        return nf.format(d);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ZlyRandomNumberUtils.nextDouble(0.1, Double.MAX_VALUE, 2));
+        System.out.println(DoubleOperationUtils.formatDouble(ZlyRandomNumberUtils.nextDouble(0.1, Double.MAX_VALUE, 2), 20));
     }
 
     /**

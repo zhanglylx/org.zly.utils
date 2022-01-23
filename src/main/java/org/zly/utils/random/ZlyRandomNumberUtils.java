@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -26,8 +27,9 @@ public class ZlyRandomNumberUtils {
 
     public static long nextLong(long min, long max) {
         if (min > max) throw new IllegalArgumentException("min > max: min=" + min + " max=" + max);
+        if (min == max) return min;
         if (min < 0 && max < 0) {
-            return -ZlyRandomNumberUtils.nextLong(-min, -max);
+            return -ZlyRandomNumberUtils.nextLong(-max, -min) - 1;
         }
         if (min < 0) {
             int startNumber = max == 0 ? 1 : 0;
@@ -145,6 +147,38 @@ public class ZlyRandomNumberUtils {
         return (long) ((Math.random() * 9 + 1) * Math.pow(10, lenth - 1));
     }
 
+
+    public static double nextDouble(double minPlaceValue, double maxPlaceValue, int scale) {
+        if (minPlaceValue > maxPlaceValue)
+            throw new IllegalArgumentException("min大于max:" + minPlaceValue + " - " + maxPlaceValue);
+        if (minPlaceValue == maxPlaceValue) return minPlaceValue;
+        BigDecimal randomDrandomBig;
+        if (minPlaceValue >= 0) {
+            randomDrandomBig = BigDecimal.valueOf(RandomUtils.nextDouble(minPlaceValue, maxPlaceValue));
+        } else if (maxPlaceValue < 0) {
+            randomDrandomBig = BigDecimal.valueOf(-RandomUtils.nextDouble(-maxPlaceValue, -minPlaceValue));
+            if (randomDrandomBig.doubleValue() == maxPlaceValue) return minPlaceValue;
+        } else {
+            if (RandomUtils.nextBoolean()) {
+                randomDrandomBig = BigDecimal.valueOf(-RandomUtils.nextDouble(0, -minPlaceValue));
+            } else {
+                randomDrandomBig = BigDecimal.valueOf(RandomUtils.nextDouble(0, maxPlaceValue));
+            }
+        }
+        randomDrandomBig = randomDrandomBig.setScale(scale, RoundingMode.DOWN);
+        return randomDrandomBig.doubleValue();
+    }
+
+    public static boolean isDoubleMantissaNotZero(BigDecimal bigDecimalValue, int scale) {
+        return !isDoubleMantissaIsZero(bigDecimalValue, scale);
+    }
+
+    public static boolean isDoubleMantissaIsZero(BigDecimal bigDecimalValue, int scale) {
+        if (scale == 0) return false;
+        String number = bigDecimalValue.toString();
+        return number.endsWith("0");
+    }
+
     /**
      * @param minPlaceValue  整数位最小数
      * @param maxPlaceValue  整数位最大值-1
@@ -178,9 +212,7 @@ public class ZlyRandomNumberUtils {
             }
             randomBig = randomBig.add(BigDecimal.valueOf(ZlyRandomNumberUtils.nextLong(minPlaceValue, maxPlaceValue)));
             if (!mantissaIsZero) {
-                if (scale == 0) return randomBig;
-                String number = randomBig.toString();
-                if (!number.endsWith("0")) return randomBig;
+                if (isDoubleMantissaNotZero(randomBig, scale)) return randomBig;
             } else {
                 return randomBig;
             }

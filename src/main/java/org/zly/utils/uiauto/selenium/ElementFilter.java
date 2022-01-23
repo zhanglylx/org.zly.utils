@@ -2,16 +2,12 @@ package org.zly.utils.uiauto.selenium;
 
 
 import lombok.Data;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.zly.utils.ListFilter;
+import org.zly.utils.collection.ZlyListFilterUtils;
 
-import java.sql.Driver;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -167,7 +163,7 @@ public class ElementFilter {
     }
 
     public static WebElement byCustom(List<WebElement> list, Predicate<WebElement> consume, int index) {
-        WebElement webElement = ListFilter.findElement(list, new Predicate<WebElement>() {
+        WebElement webElement = ZlyListFilterUtils.findElement(list, new Predicate<WebElement>() {
 
             @Override
             public boolean test(WebElement webElement) {

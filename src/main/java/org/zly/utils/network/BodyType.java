@@ -28,6 +28,6 @@ public interface BodyType<R> {
 //        for (Type genericInterface : getClass().getGenericInterfaces()) {
 //            return (Class<E>) (((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
 //        }
-        throw new IllegalArgumentException("没有找到模板泛型E");
+        throw new IllegalArgumentException("没有找到模板泛型R");
     }
 }

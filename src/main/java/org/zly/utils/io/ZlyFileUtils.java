@@ -129,18 +129,40 @@ public class ZlyFileUtils {
         return true;
     }
 
+    public static void traversalFolderFile(final File file, final Consumer<File> fileConsumer) {
+        traversalFolder(file, f -> {
+            if (f.isFile()) fileConsumer.accept(f);
+        });
+    }
+
+    public static void traversalFolderDirectory(final File file, final Consumer<File> fileConsumer) {
+        traversalFolder(file, f -> {
+            if (f.isDirectory()) fileConsumer.accept(f);
+        });
+    }
 
     /**
-     * Delete the supplied {@link File} &mdash; for directories,
-     * recursively delete any nested directories or files as well.
+     * 遍历目录下的文件
      *
-     * @param root the root {@code File} to delete
-     * @return {@code true} if the {@code File} existed and was deleted,
-     * or {@code false} if it did not exist
-     * @throws IOException in the case of I/O errors
-     * @since 5.0
+     * @param file
+     * @param fileConsumer
      */
-//    运行期间会存在系统目录权限问题，弃用
+    public static void traversalFolder(final File file, final Consumer<File> fileConsumer) {
+        Objects.requireNonNull(file);
+        Objects.requireNonNull(fileConsumer);
+        if (!file.exists()) return;
+        if (file.isDirectory()) {
+            File[] listFiles = file.listFiles();
+            if (listFiles != null) {
+                for (File f : listFiles) {
+                    traversalFolder(f, fileConsumer);
+                }
+            }
+        }
+        fileConsumer.accept(file);
+    }
+
+//    运行期间会存在系统目录权限问题
     public static void traversalFolderFile(@Nullable Path root, final SimpleFileVisitor<Path> simpleFileVisitor) throws IOException {
         Objects.requireNonNull(root);
         if (!Files.exists(root)) {
@@ -150,12 +172,23 @@ public class ZlyFileUtils {
     }
 
 
-    public static class SimpleFileVisitorDefault<T> extends SimpleFileVisitor<T> {
+    public static abstract class SimpleFileVisitorDefault<T> extends SimpleFileVisitor<T> {
         @Override
         public FileVisitResult visitFileFailed(T file, IOException exc) throws IOException {
             if (exc instanceof AccessDeniedException) return FileVisitResult.CONTINUE;
             return super.visitFileFailed(file, exc);
         }
+        @Override
+        public abstract FileVisitResult visitFile(T file, BasicFileAttributes attrs);
+    }
+
+    public static void main(String[] args) throws IOException {
+        traversalFolderFile(new File("").toPath(), new SimpleFileVisitorDefault<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     /**
@@ -236,7 +269,6 @@ public class ZlyFileUtils {
         }
         return fileName;
     }
-
 
 
 }

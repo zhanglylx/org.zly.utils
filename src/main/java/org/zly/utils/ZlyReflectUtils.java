@@ -28,6 +28,8 @@ public class ZlyReflectUtils {
 
     private static final Map<Class<?>, Type[]> GENERIC_TYPES_CACHE = new ConcurrentHashMap<>();
 
+    private static final Object GET_CLASS_ALL_LIST_LOCKGET_CLAS = new Object();
+
     @SafeVarargs
     public static List<Function<Field, String>> assemblyFormattings(Function<Field, String>... formattings) {
         if (formattings == null) return null;
@@ -49,15 +51,19 @@ public class ZlyReflectUtils {
     }
 
     public static List<Class<?>> getClassAlList(Class<?> clazz) {
-        List<Class<?>> list = BUFFER_CLASS.get(clazz);  // 保存属性对象数组到列表
+        List<Class<?>> list = BUFFER_CLASS.get(clazz);
         if (list != null) return list;
-        list = new ArrayList<>();
-        BUFFER_CLASS.put(clazz, list);
-        while (clazz != null) {  // 遍历所有父类字节码对象
-            list.add(clazz);
-            clazz = clazz.getSuperclass();  // 获得父类的字节码对象
+        synchronized (GET_CLASS_ALL_LIST_LOCKGET_CLAS) {
+            list = BUFFER_CLASS.get(clazz);  // 保存属性对象数组到列表
+            if (list != null) return list;
+            list = new ArrayList<>();
+            BUFFER_CLASS.put(clazz, list);
+            while (clazz != null) {  // 遍历所有父类字节码对象
+                list.add(0, clazz);
+                clazz = clazz.getSuperclass();  // 获得父类的字节码对象
+            }
+            return list;
         }
-        return list;
     }
 
     public static List<Field> getDeclaredFields(Class<?> clazz, boolean containsParentClass) {
@@ -76,7 +82,7 @@ public class ZlyReflectUtils {
      * @return ${clazz}的公共Get方法对象
      */
     public static Map<Field, Method> getMemberPublicMethods(Class<?> clazz, boolean containsParentClass, List<Function<Field, String>> formattings, Class<?>... parameterTypes) {
-        Map<Field, Method> methods = new HashMap<>();
+        Map<Field, Method> methods = new LinkedHashMap<>();
         for (Field field : getDeclaredFields(clazz, containsParentClass)) {
             Method method;
             try {
@@ -101,7 +107,7 @@ public class ZlyReflectUtils {
             return (Class<?>) (getGenericTypes(clazz)[index]);
         } catch (ClassCastException e) {
             if (type instanceof ParameterizedTypeImpl) {
-                return ((ParameterizedTypeImpl)type).getRawType();
+                return ((ParameterizedTypeImpl) type).getRawType();
             }
         }
         return (Class<?>) type;
