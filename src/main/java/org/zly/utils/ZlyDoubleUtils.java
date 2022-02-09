@@ -9,7 +9,7 @@ import java.text.NumberFormat;
 /**
  * double类型运算
  */
-public class DoubleOperationUtils {
+public class ZlyDoubleUtils {
     private static final int DIV_SCALE = 10;//默认除法运算精度
 
     /**
@@ -44,7 +44,7 @@ public class DoubleOperationUtils {
 
     public static void main(String[] args) {
         System.out.println(ZlyRandomNumberUtils.nextDouble(0.1, Double.MAX_VALUE, 2));
-        System.out.println(DoubleOperationUtils.formatDouble(ZlyRandomNumberUtils.nextDouble(0.1, Double.MAX_VALUE, 2), 20));
+        System.out.println(ZlyDoubleUtils.formatDouble(ZlyRandomNumberUtils.nextDouble(0.1, Double.MAX_VALUE, 2), 20));
     }
 
     /**

@@ -12,16 +12,16 @@ import java.util.Map;
  */
 public class ZlyRandomSetUtils {
 
-    public static Integer nextIndex(Map<?, ?> map) {
+    public static int nextIndex(Map<?, ?> map) {
         return ZlyRandomNumberUtils.nextInt(0, map.size());
     }
 
-    public static Integer nextIndex(List<?> list) {
+    public static int nextIndex(List<?> list) {
         return ZlyRandomNumberUtils.nextInt(0, list.size());
     }
 
 //    @SafeVarargs
-    public static <T> Integer nextIndex(T[] o) {
+    public static <T> int nextIndex(T[] o) {
         return ZlyRandomNumberUtils.nextInt(0, o.length);
     }
 
@@ -40,7 +40,7 @@ public class ZlyRandomSetUtils {
     }
 
 
-    public static <O> O nextValue(O[] t) {
+    public static <T> T nextValue(T[] t) {
         return t[nextIndex(t)];
     }
 

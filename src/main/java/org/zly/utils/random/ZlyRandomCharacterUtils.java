@@ -102,6 +102,18 @@ public class ZlyRandomCharacterUtils {
 //
 //    }
 
+    public static String nextMixtureExclude(CharRandomType... charRandomType) {
+        return nextMixtureExclude(1, charRandomType);
+    }
+
+    public static String nextMixtureExclude(int min, int max, CharRandomType... charRandomType) {
+        return nextMixtureExclude(ZlyRandomNumberUtils.nextInt(min, max), charRandomType);
+    }
+    public static String nextMixtureExclude(int number, CharRandomType... charRandomType) {
+        if (charRandomType == null || charRandomType.length == 0) return nextMixture(charRandomType);
+        return nextMixture(number,ArrayUtils.removeElements(CharRandomType.values(), charRandomType));
+    }
+
     public static String nextMixture(int number, CharRandomType... charRandomType) {
         if (charRandomType == null || charRandomType.length == 0) charRandomType = CharRandomType.values();
         if (number < 1) throw new IllegalArgumentException("number不能小于1");
@@ -148,9 +160,7 @@ public class ZlyRandomCharacterUtils {
         return ZlyRandomStrTypeCache.MOBILE_PHONE.nextRandoms(number);
     }
 
-    public static void main(String[] args) {
-        System.out.println(nextIpAddress());
-    }
+
 
 
 }

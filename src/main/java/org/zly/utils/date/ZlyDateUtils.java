@@ -27,6 +27,12 @@ public class ZlyDateUtils {
     }
 
 
+    public static Date plusDays(Date standardDate, int day) {
+        Objects.requireNonNull(standardDate);
+        return new DateTime(standardDate).plusDays(day).toDate();
+    }
+
+
     public static Date getDateFormat(String time, String format) {
         return getDateConversion(time, format);
     }
@@ -163,7 +169,7 @@ public class ZlyDateUtils {
     public static long getDayDiff(Date smdate, Date bdate) {
         long bDay = bdate.getTime() / DateUtils.MILLIS_PER_DAY;
         long aDay = smdate.getTime() / DateUtils.MILLIS_PER_DAY;
-        return bDay-aDay;
+        return Math.abs(bDay-aDay);
     }
 
     public static void main(String[] args) {

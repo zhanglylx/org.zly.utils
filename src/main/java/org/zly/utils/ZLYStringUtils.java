@@ -68,7 +68,7 @@ public class ZLYStringUtils {
         if (target == null) throw new IllegalArgumentException("target为空");
         int ld = ldStr(strHashAscSort(matching), strHashAscSort(target));
         double d = 1 - (double) ld / Math.max(matching.length(), target.length());
-        return DoubleOperationUtils.roundHalfUp(d * 100, scale);
+        return ZlyDoubleUtils.roundHalfUp(d * 100, scale);
 
     }
 
