@@ -1,6 +1,11 @@
 package org.zly.utils.io;
 
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -10,13 +15,11 @@ import org.zly.utils.network.ZlyHttpUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -115,36 +118,31 @@ public class ZlyExcelUtils {
         try (Workbook workbook = new XSSFWorkbook()) {
             String[] titles = new String[]{};
             Sheet sheet = workbook.createSheet();
-            Row row = sheet.createRow(0);
+
+            final Map<Field, Method> memberPublicMethods = ZlyReflectUtils.getMemberPublicMethods(entityClass, true);
+            final Set<Map.Entry<Field, Method>> entries = memberPublicMethods.entrySet();
+//            创建标题行
             int index = 0;
-            for (Method titleMethod : ZlyReflectUtils.getMemberPublicMethods(entityClass, true).values()) {
-                String name = titleMethod.getName();
+            Row row = sheet.createRow(0);
+            for (Map.Entry<Field, Method> entry : entries) {
+                String name = entry.getKey().getName();
                 titles = ArrayUtils.add(titles, name);
-                name = name.substring(3);
-                if (name.length() > 1) {
-                    row.createCell(index).setCellValue(
-                            Character.toLowerCase(name.charAt(0)) + name.substring(1));
-                } else {
-                    row.createCell(index).setCellValue(name.toLowerCase());
-                }
+                row.createCell(index).setCellValue(name);
                 sheet.autoSizeColumn(index);
                 index++;
-
             }
-            Method dataMethod;
+//            赋值
             T data;
             for (int i = 0; i < dataList.size(); ++i) {
                 row = sheet.createRow(i + 1);
-                for (int titleIndex = 0; titleIndex < titles.length; ++titleIndex) {
-                    data = dataList.get(i);
-                    dataMethod = data.getClass().getDeclaredMethod(titles[titleIndex]);
-                    setCellValue(row, titleIndex, dataMethod.invoke(data));
+                data = dataList.get(i);
+                int rowIndex = 0;
+                for (Map.Entry<Field, Method> entry : entries) {
+                    setCellValue(row, rowIndex++, entry.getValue().invoke(data));
                 }
             }
             workbook.write(outputStream);
             outputStream.flush();
-        } catch (IOException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw e;
         } finally {
             if (outputStreamClose) outputStream.close();
         }
@@ -241,6 +239,31 @@ public class ZlyExcelUtils {
         });
     }
 
+
+    public static <T> List<T> getExcelXlsxByClass(File inputStream, Class<T> tClass) {
+        return getExcelXlsxByClass(inputStream, 0, tClass);
+    }
+
+    @SneakyThrows
+    public static <T> List<T> getExcelXlsxByClass(File inputStream, int sheetNum, Class<T> tClass) {
+        return getExcelXlsxByClass(new FileInputStream(inputStream), sheetNum, tClass);
+    }
+
+    public static <T> List<T> getExcelXlsxByClass(InputStream inputStream, int sheetNum, Class<T> tClass) {
+        final Map<Integer, Map<String, String>> excelXlsx = getExcelXlsx(inputStream, sheetNum);
+        List<T> list = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        excelXlsx.forEach(new BiConsumer<Integer, Map<String, String>>() {
+            @SneakyThrows
+            @Override
+            public void accept(Integer integer, Map<String, String> dataMap) {
+                final byte[] bytes = mapper.writeValueAsBytes(dataMap);
+                list.add(mapper.readValue(bytes, tClass));
+            }
+        });
+        return list;
+    }
+
     private static String getCellValue(Sheet sheet, int rownum, int columnIndex) {
         Row row = sheet.getRow(rownum);
         if (row == null) return "";
@@ -252,35 +275,19 @@ public class ZlyExcelUtils {
 
 
     public static void main(String[] args) throws IOException {
-        System.out.println("hello word");
-        File aFile = new File("C:\\Users\\Administrator\\Desktop\\aaaa.xlsx");
-        File bFile = new File("C:\\Users\\Administrator\\Desktop\\bbbb.xlsx");
-        final Map<Integer, Map<String, String>> excelXlsxa = ZlyExcelUtils.getExcelXlsx(aFile);
-        final Map<Integer, Map<String, String>> excelXlsxb = ZlyExcelUtils.getExcelXlsx(bFile);
-        int i = 0;
-        for (Map.Entry<Integer, Map<String, String>> integerMapEntry : excelXlsxa.entrySet()) {
-            final Map.Entry<Integer, Map<String, String>> integerMapEntry1 = integerMapEntry;
-            final Map<String, String> stringStringMap = excelXlsxb.get(i);
-            int finalI = i;
-            Map<String, String> map = new LinkedHashMap<>();
-            integerMapEntry1.getValue().forEach(new BiConsumer<String, String>() {
-                @Override
-                public void accept(String s, String s2) {
-                    if (s.equals("李笑b")) {
-                        if (s2.equals(stringStringMap.get("连宇b"))) {
-                            map.put("这是匹配的行", "是");
-                        }
-                    } else {
-                        map.put("这是匹配的行", "否");
-                    }
-                }
-            });
-            excelXlsxa.get(i).putAll(stringStringMap);
-            excelXlsxa.get(i).putAll(map);
-            i++;
-        }
-        ZlyExcelUtils.createExcelFile(new File("C:\\Users\\Administrator\\Desktop\\CC.xlsx"), "李笑叫我弄的", excelXlsxa);
+        final File file = new File("C:\\Users\\Administrator\\Desktop\\11.xlsx");
+        final List<AA> excelXlsxByClass = ZlyExcelUtils.getExcelXlsxByClass(file, AA.class);
+        System.out.println(excelXlsxByClass);
+        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结.xlsx")), 0);
 
+    }
+
+    @Data
+    public static class AA {
+        @JsonProperty("AAA是")
+        private String a;
+        @JsonProperty("BBB")
+        private String b;
     }
 
 }

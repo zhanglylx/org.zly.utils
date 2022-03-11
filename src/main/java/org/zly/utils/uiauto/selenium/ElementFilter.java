@@ -110,7 +110,6 @@ public class ElementFilter {
         return byCustom(this.webDriver.findElements(by), consume, 0);
     }
 
-
     public WebElement byCustomWait(By by, Predicate<WebElement> consume) {
         return byCustomWait(by, consume, 0);
     }

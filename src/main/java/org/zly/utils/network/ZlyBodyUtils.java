@@ -1,13 +1,6 @@
 package org.zly.utils.network;
 
-import com.alibaba.fastjson.JSONObject;
-import lombok.Data;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.zly.utils.ZlyReflectUtils;
 
 import java.lang.reflect.Method;

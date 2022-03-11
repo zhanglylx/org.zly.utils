@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PascalNameFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.util.TypeUtils;
-import org.springframework.http.HttpEntity;
 
 import java.util.HashMap;
 import java.util.Map;

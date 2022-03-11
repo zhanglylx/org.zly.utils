@@ -1,10 +1,11 @@
 package org.zly.utils.date;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.DateTime;
+import org.joda.time.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -26,6 +27,23 @@ public class ZlyDateUtils {
         return sdf.format(date);
     }
 
+    public static List<String> getStrDate(List<Date> date, String format) {
+        List<String> strings = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        for (Date date1 : date) {
+            strings.add(sdf.format(date1));
+        }
+        return strings;
+    }
+
+
+    public static Date plusDays(String date, int day) {
+        return plusDays(date, GENERAL_TIME_FORMAT, day);
+    }
+
+    public static Date plusDays(String date, String format, int day) {
+        return plusDays(ZlyDateUtils.getDateFormat(date, format), day);
+    }
 
     public static Date plusDays(Date standardDate, int day) {
         Objects.requireNonNull(standardDate);
@@ -33,8 +51,8 @@ public class ZlyDateUtils {
     }
 
 
-    public static Date getDateFormat(String time, String format) {
-        return getDateConversion(time, format);
+    public static Date getDateFormat(String date, String format) {
+        return getDateConversion(date, format);
     }
 
     /**
@@ -166,26 +184,27 @@ public class ZlyDateUtils {
      * @param bdate
      * @return
      */
-    public static long getDayDiff(Date smdate, Date bdate) {
-        long bDay = bdate.getTime() / DateUtils.MILLIS_PER_DAY;
-        long aDay = smdate.getTime() / DateUtils.MILLIS_PER_DAY;
-        return Math.abs(bDay-aDay);
+    public static long getDayDiff(Date smdate, Date bdate, boolean abs) {
+//        smdate = DateUtils.truncate(smdate, Calendar.DATE);
+//        bdate = DateUtils.truncate(bdate, Calendar.DATE);
+//        long bDay = bdate.getTime() / DateUtils.MILLIS_PER_DAY;
+//        long aDay = smdate.getTime() / DateUtils.MILLIS_PER_DAY;
+//        ChronoUnit.DAYS.between(starLocalDate, endLocalDate);
+        DateTime a = new DateTime(smdate);
+        DateTime b = new DateTime(bdate);
+        int d = Days.daysBetween(a, b).getDays();
+        return abs ? Math.abs(d) : d;
     }
 
-    public static void main(String[] args) {
-        final DateTime date1 =  new DateTime(setZeroTime(new Date()));
-        final DateTime dateTime = DateTime.now().plusSeconds(-1);
-        System.out.println(date1);
-        System.out.println(dateTime);
-        System.out.println(getDayDiff(date1.toDate(),dateTime.toDate()));
-    }
+
     /**
      * 设置零时
      *
      * @return
      */
     public static Date setZeroTime(Date date) {
-        return new Date(date.getTime() / (1000 * 3600 * 24) * (1000 * 3600 * 24) - TimeZone.getDefault().getRawOffset());
+        return DateUtils.truncate(date, Calendar.DATE);
+//        return new Date(date.getTime() / (1000 * 3600 * 24) * (1000 * 3600 * 24) - TimeZone.getDefault().getRawOffset());
     }
 
 //    long current=System.currentTimeMillis();//当前时间毫秒数
@@ -196,35 +215,59 @@ public class ZlyDateUtils {
     /**
      * 返回两个时间的相差分钟数
      */
-    public static Long getMinuteDiff(Date startTime, Date endTime) {
-        Long minutes = null;
-        Calendar c = Calendar.getInstance();
-        c.setTime(startTime);
-        long l_s = c.getTimeInMillis();
-        c.setTime(endTime);
-        long l_e = c.getTimeInMillis();
-        minutes = (l_e - l_s) / DateUtils.MILLIS_PER_MINUTE;
-        return minutes;
+    public static int getMinuteDiff(Date startTime, Date endTime, boolean abs) {
+//        Long minutes = null;
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(startTime);
+//        long l_s = c.getTimeInMillis();
+//        c.setTime(endTime);
+//        long l_e = c.getTimeInMillis();
+//        minutes = (l_e - l_s) / DateUtils.MILLIS_PER_MINUTE;
+//        return minutes;
+        DateTime a = new DateTime(startTime);
+        DateTime b = new DateTime(endTime);
+        int d = Minutes.minutesBetween(a, b).getMinutes();
+        return abs ? Math.abs(d) : d;
     }
 
     /**
      * 返回两个时间的相差秒数
      */
-    public static Long getSecondDiff(Date startTime, Date endTime) {
-        return (endTime.getTime() - startTime.getTime()) / DateUtils.MILLIS_PER_SECOND;
+    public static int getSecondDiff(Date startTime, Date endTime, boolean abs) {
+//        return (endTime.getTime() - startTime.getTime()) / DateUtils.MILLIS_PER_SECOND;
+        DateTime a = new DateTime(startTime);
+        DateTime b = new DateTime(endTime);
+        final int seconds = Seconds.secondsBetween(a, b).getSeconds();
+        return abs ? Math.abs(seconds) : seconds;
     }
 
     /**
      * 返回两个时间的相差月数
      */
-    public static int getMonthDiff(Date startTime, Date endTime) {
-        int months = 0;
-        Calendar startCalendar = Calendar.getInstance();
-        Calendar endCalendar = Calendar.getInstance();
-        startCalendar.setTime(startTime);
-        endCalendar.setTime(endTime);
-        months = endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
-        return months;
+    public static int getMonthDiff(Date startTime, Date endTime, boolean abs) {
+//        int months = 0;
+//        Calendar startCalendar = Calendar.getInstance();
+//        Calendar endCalendar = Calendar.getInstance();
+//        startCalendar.setTime(startTime);
+//        endCalendar.setTime(endTime);
+//        months = endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+//        return months;
+        DateTime a = new DateTime(startTime);
+        DateTime b = new DateTime(endTime);
+        final int months1 = Months.monthsBetween(a, b).getMonths();
+        return abs ? Math.abs(months1) : months1;
+
+    }
+
+    public static void main(String[] args) {
+        DateTime a = new DateTime(new Date());
+        DateTime b = new DateTime(new Date()).plusDays(100);
+        long t = System.currentTimeMillis();
+        System.out.println(Days.daysBetween(b, a).getDays());
+        System.out.println(System.currentTimeMillis() - t);
+        t = System.currentTimeMillis();
+//        System.out.println(getDayDiff(a.toDate(), b.toDate()));
+        System.out.println(System.currentTimeMillis() - t);
     }
 
 
@@ -256,39 +299,73 @@ public class ZlyDateUtils {
         return checkData.getTime() >= less1 && checkData.getTime() <= big1;
     }
 
+    /**
+     * 获取两个日期之间的连续天数
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public static List<Date> getConsecutiveDays(Date startDate, Date endDate) {
         List<Date> dates = new ArrayList<>();
-        if (startDate.getTime() > endDate.getTime()) throw new IllegalArgumentException("终止日期不能小于起始日期");
-        while (startDate.getTime() <= endDate.getTime()) {
-            dates.add(startDate);
-            startDate = new DateTime(startDate).plusDays(1).toDate();
+        final long dayDiff = getDayDiff(startDate, endDate, false);
+        if (dayDiff < 0) throw new IllegalArgumentException("终止日期不能小于起始日期");
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        dates.add(c.getTime());
+        for (int i = 0; i < dayDiff; i++) {
+            c.add(Calendar.DATE, 1);
+            dates.add(c.getTime());
         }
         return dates;
     }
 
 
-    /**
-     * 获取最近N个月的日期
-     *
-     * @param size
-     * @return
-     */
-    public static List<String> getLastMonths(int size, String form) {
+    public static List<String> getConsecutiveMonth(Date start, Date endDate, String form) {
+        final List<Date> consecutiveMonth = getConsecutiveMonth(start, endDate);
+        List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat(form);
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        List<String> list = new ArrayList<>(size);
-        for (int i = size - 1; i >= 0; i--) {
-            c.setTime(new Date());
-            c.add(Calendar.MONTH, -i);
-            Date m = c.getTime();
-            list.add(sdf.format(m));
+        for (Date c : consecutiveMonth) {
+            list.add(sdf.format(c));
         }
-        Collections.reverse(list);
         return list;
     }
 
-    public static List<String> getLastMonths(int size) {
-        return getLastMonths(size, YYMM);
+    public static List<Date> getConsecutiveMonth(Date start, Date end) {
+        start = DateUtils.truncate(start, Calendar.DATE);
+        end = DateUtils.truncate(end, Calendar.DATE);
+        Calendar c = Calendar.getInstance();
+        c.setTime(start);
+        List<Date> list = new ArrayList<>();
+        Date d;
+        while ((d = c.getTime()).compareTo(end) < 1) {
+            list.add(d);
+            c.add(Calendar.MONTH, 1);
+        }
+        return list;
     }
+
+    /**
+     * 获取日期下的最后一个月的最后一天
+     *
+     * @return 返回指定日期年下的最后一个月的最后一天
+     */
+    public static Date getLastDayOfLastMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(calendar.get(Calendar.YEAR), Calendar.DECEMBER, 31);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取日期月下的最后一天
+     *
+     * @param date 指定的年月日期
+     * @return 返回给定日期月份下的最后一天日期
+     */
+    public static Date getLastDayOfMonth(Date date) {
+        DateTime dateTime = new DateTime(date);
+        return dateTime.withDayOfMonth(ZlyDateTimeUtils.calculateMonthDay(dateTime)).toDate();
+    }
+
 }
