@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author zly
@@ -20,11 +21,14 @@ public class ZlyRandomSetUtils {
         return ZlyRandomNumberUtils.nextInt(0, list.size());
     }
 
-//    @SafeVarargs
+    //    @SafeVarargs
     public static <T> int nextIndex(T[] o) {
         return ZlyRandomNumberUtils.nextInt(0, o.length);
     }
 
+    public static <T> T nextValue(Supplier<T>[] suppliers) {
+        return suppliers[nextIndex(suppliers)].get();
+    }
 
     public static <T> T nextValue(List<T> list) {
         return list.get(nextIndex(list));
@@ -49,7 +53,4 @@ public class ZlyRandomSetUtils {
         return ZlyRandomSetUtils.nextValue(ts);
     }
 
-//    public static Object nextValues(Object... o) {
-//        return ZlySetUtils.nextValue(o);
-//    }
 }

@@ -36,6 +36,10 @@ public class ZlyDateUtils {
         return strings;
     }
 
+    public static Date plusDays(int day) {
+        return plusDays(new Date(), day);
+    }
+
 
     public static Date plusDays(String date, int day) {
         return plusDays(date, GENERAL_TIME_FORMAT, day);
@@ -184,7 +188,7 @@ public class ZlyDateUtils {
      * @param bdate
      * @return
      */
-    public static long getDayDiff(Date smdate, Date bdate, boolean abs) {
+    public static int getDayDiff(Date smdate, Date bdate, boolean abs) {
 //        smdate = DateUtils.truncate(smdate, Calendar.DATE);
 //        bdate = DateUtils.truncate(bdate, Calendar.DATE);
 //        long bDay = bdate.getTime() / DateUtils.MILLIS_PER_DAY;
@@ -205,6 +209,16 @@ public class ZlyDateUtils {
     public static Date setZeroTime(Date date) {
         return DateUtils.truncate(date, Calendar.DATE);
 //        return new Date(date.getTime() / (1000 * 3600 * 24) * (1000 * 3600 * 24) - TimeZone.getDefault().getRawOffset());
+    }
+
+    /**
+     * 设置零时
+     *
+     * @return
+     */
+    public static Date setDayLastTime(Date date) {
+        DateTime dateTime = new DateTime(date);
+        return dateTime.withTime(23, 59, 59, 59).toDate();
     }
 
 //    long current=System.currentTimeMillis();//当前时间毫秒数
@@ -257,17 +271,6 @@ public class ZlyDateUtils {
         final int months1 = Months.monthsBetween(a, b).getMonths();
         return abs ? Math.abs(months1) : months1;
 
-    }
-
-    public static void main(String[] args) {
-        DateTime a = new DateTime(new Date());
-        DateTime b = new DateTime(new Date()).plusDays(100);
-        long t = System.currentTimeMillis();
-        System.out.println(Days.daysBetween(b, a).getDays());
-        System.out.println(System.currentTimeMillis() - t);
-        t = System.currentTimeMillis();
-//        System.out.println(getDayDiff(a.toDate(), b.toDate()));
-        System.out.println(System.currentTimeMillis() - t);
     }
 
 
@@ -366,6 +369,21 @@ public class ZlyDateUtils {
     public static Date getLastDayOfMonth(Date date) {
         DateTime dateTime = new DateTime(date);
         return dateTime.withDayOfMonth(ZlyDateTimeUtils.calculateMonthDay(dateTime)).toDate();
+    }
+
+    /**
+     * 获取日期下的1号
+     *
+     * @param date
+     * @return
+     */
+    public static Date getFirstDayOfMonth(Date date) {
+        DateTime dateTime = new DateTime(date);
+        return dateTime.withDayOfMonth(1).toDate();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ZlyDateUtils.getStrDefaultFormat(getFirstDayOfMonth(new Date())));
     }
 
 }

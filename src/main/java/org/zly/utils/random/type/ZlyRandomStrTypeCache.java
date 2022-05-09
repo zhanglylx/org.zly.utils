@@ -14,6 +14,7 @@ public enum ZlyRandomStrTypeCache implements ZlyRandom<String> {
     IP_ADDRESS(new ZlyRandomIpAddress()),
     MOBILE_PHONE(new ZlyRandomMobilePhone()),
     ONLY_STRING(new ZlyRandomOnlyString()),
+    USER_ID(new ZlyRandomUserId()),
     UUID(new ZlyRandomUUID());
 
     private final ZlyRandom<String> random;
@@ -27,14 +28,14 @@ public enum ZlyRandomStrTypeCache implements ZlyRandom<String> {
         return this.random.nextRandom();
     }
 
-    @Override
-    public String nextRandom(int number) {
-        return this.random.nextRandom();
-    }
 
     @Override
     public List<String> nextRandoms(int number) {
         return this.random.nextRandoms(number);
+    }
+
+    public ZlyRandom<String> getRandom() {
+        return this.random;
     }
 
 }

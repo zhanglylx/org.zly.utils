@@ -20,7 +20,11 @@ public class ZlyRandomCharacterUtils {
      * @return 返回指定长度的字符串，包含数字，字母，特殊字符
      */
     public static String nextPassword(int number) {
-        return ZlyRandomStrTypeCache.PASSWORD.nextRandom(number);
+        return ((ZlyRandomPassword) (ZlyRandomStrTypeCache.PASSWORD).getRandom()).nextRandom(number);
+    }
+
+    public static String nextUserId() {
+        return ZlyRandomStrTypeCache.USER_ID.nextRandom();
     }
 
     public static String nextPassword(int min, int max) {
@@ -109,9 +113,10 @@ public class ZlyRandomCharacterUtils {
     public static String nextMixtureExclude(int min, int max, CharRandomType... charRandomType) {
         return nextMixtureExclude(ZlyRandomNumberUtils.nextInt(min, max), charRandomType);
     }
+
     public static String nextMixtureExclude(int number, CharRandomType... charRandomType) {
         if (charRandomType == null || charRandomType.length == 0) return nextMixture(charRandomType);
-        return nextMixture(number,ArrayUtils.removeElements(CharRandomType.values(), charRandomType));
+        return nextMixture(number, ArrayUtils.removeElements(CharRandomType.values(), charRandomType));
     }
 
     public static String nextMixture(int number, CharRandomType... charRandomType) {
@@ -159,8 +164,6 @@ public class ZlyRandomCharacterUtils {
     public static List<String> nextRandomPhone(int number) {
         return ZlyRandomStrTypeCache.MOBILE_PHONE.nextRandoms(number);
     }
-
-
 
 
 }

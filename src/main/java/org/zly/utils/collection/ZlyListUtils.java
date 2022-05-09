@@ -1,9 +1,6 @@
 package org.zly.utils.collection;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -57,5 +54,29 @@ public class ZlyListUtils {
                 return 0;
             }
         };
+    }
+
+    public static String toString(List<?> list) {
+        return toString(list, "\n");
+    }
+
+    public static String toString(List<?> list, String separator) {
+        return toString(list, separator, "null");
+    }
+
+    public static String toString(List<?> list, String separator, String defaultValue) {
+        if (list == null || list.isEmpty()) return defaultValue;
+        StringBuilder sb = new StringBuilder();
+        Object object;
+        for (int i = 0; i < list.size(); i++) {
+            object = list.get(i);
+            if (object == null) {
+                sb.append(defaultValue);
+            } else {
+                sb.append(object);
+            }
+            if (i != list.size() - 1) sb.append(separator);
+        }
+        return sb.toString();
     }
 }

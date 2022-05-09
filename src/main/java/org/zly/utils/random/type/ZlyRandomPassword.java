@@ -10,7 +10,7 @@ public class ZlyRandomPassword implements ZlyRandom<String> {
         return nextRandom(6);
     }
 
-    @Override
+
     public String nextRandom(int number) {
         return ZlyRandomCharacterUtils.nextMixture(number, CharRandomType.NUMBER, CharRandomType.ENGLISH, CharRandomType.SPECIAL);
     }

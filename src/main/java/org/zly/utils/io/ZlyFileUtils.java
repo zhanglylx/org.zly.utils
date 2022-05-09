@@ -162,7 +162,7 @@ public class ZlyFileUtils {
         fileConsumer.accept(file);
     }
 
-//    运行期间会存在系统目录权限问题
+    //    运行期间会存在系统目录权限问题
     public static void traversalFolderFile(@Nullable Path root, final SimpleFileVisitor<Path> simpleFileVisitor) throws IOException {
         Objects.requireNonNull(root);
         if (!Files.exists(root)) {
@@ -178,18 +178,11 @@ public class ZlyFileUtils {
             if (exc instanceof AccessDeniedException) return FileVisitResult.CONTINUE;
             return super.visitFileFailed(file, exc);
         }
+
         @Override
         public abstract FileVisitResult visitFile(T file, BasicFileAttributes attrs);
     }
 
-    public static void main(String[] args) throws IOException {
-        traversalFolderFile(new File("").toPath(), new SimpleFileVisitorDefault<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
 
     /**
      * Recursively copy the contents of the {@code src} file/directory
@@ -268,6 +261,29 @@ public class ZlyFileUtils {
             }
         }
         return fileName;
+    }
+
+    /**
+     * 创建文件，如果目录不存在则自动创建目录后创建文件，也可以直接创建目录
+     * @param file
+     */
+    @SneakyThrows
+    public static void createFile(File file) {
+        if (file.exists()) return;
+        createDir(file.getParentFile());
+        final boolean newFile = file.createNewFile();
+        if(!newFile)throw new RuntimeException("创建文件失败:"+file);
+    }
+
+    public static void createDir(File file) {
+        if (file.exists()) return;
+        final boolean mkdirs = file.mkdirs();
+        if(!mkdirs)throw new RuntimeException("创建目录失败:"+file.getParentFile());
+    }
+
+
+    public static void main(String[] args) {
+        createFile(new File("llll/lll"));
     }
 
 

@@ -23,6 +23,12 @@ import java.util.regex.Pattern;
 
 public class NumberUtils {
 
+    /**
+     * 转成负数
+     *
+     * @param number
+     * @return
+     */
     public static byte switchNegative(byte number) {
         return (byte) switchNegative(Long.valueOf(number));
     }
@@ -48,7 +54,7 @@ public class NumberUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结.xlsx")), 1);
+        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结.xlsx")), null,1);
         Map<Integer, Map<String, String>> map = new LinkedHashMap<>();
         final int[] index = {0};
         excelXlsx.forEach(new BiConsumer<Integer, Map<String, String>>() {
@@ -57,26 +63,26 @@ public class NumberUtils {
                 final String count = stringStringMap.get("总套餐数");
                 System.out.println(count);
                 Double n = Double.valueOf(count);
-                if(n>1){
+                if (n > 1) {
                     BigDecimal b = new BigDecimal(stringStringMap.get("应收价值"));
                     final BigDecimal divide = b.divide(new BigDecimal(n), 2, RoundingMode.DOWN);
-                    if(stringStringMap.get("套餐名称").equals("美团48元=50币 ")){
+                    if (stringStringMap.get("套餐名称").equals("美团48元=50币 ")) {
                         System.out.println(n);
                         System.out.println(b);
                         System.out.println("-===========");
                     }
-                    for (int i = 0; i <n ; i++) {
+                    for (int i = 0; i < n; i++) {
                         final LinkedHashMap<String, String> objectObjectLinkedHashMap = new LinkedHashMap<>(stringStringMap);
-                        objectObjectLinkedHashMap.put("应收价值",divide.toString());
-                        objectObjectLinkedHashMap.put("总套餐数","1");
-                        map.put(index[0]++,objectObjectLinkedHashMap);
+                        objectObjectLinkedHashMap.put("应收价值", divide.toString());
+                        objectObjectLinkedHashMap.put("总套餐数", "1");
+                        map.put(index[0]++, objectObjectLinkedHashMap);
                     }
-                }else {
-                    map.put(index[0]++,stringStringMap);
+                } else {
+                    map.put(index[0]++, stringStringMap);
                 }
             }
         });
-        ZlyExcelUtils.createExcelFile(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结-1.xlsx"),"1",map);
+        ZlyExcelUtils.createExcelFile(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结-1.xlsx"), "1", map);
         System.out.println(excelXlsx);
     }
 

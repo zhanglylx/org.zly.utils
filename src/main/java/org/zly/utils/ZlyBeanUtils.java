@@ -1,16 +1,22 @@
 package org.zly.utils;
 
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.zly.utils.random.RandomDate;
 
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -98,4 +104,37 @@ public class ZlyBeanUtils {
             copyPropertiesIgnoreExistValue(sources, target);
         }
     }
+
+    /**
+     * 检查任意一个属性是null
+     * @param impl
+     * @param containsParentClass
+     * @return  有一个属性为空则为true
+     */
+    public static boolean isPropertiesAnyIsNull(Object impl, boolean containsParentClass) {
+        return !isPropertiesNoneIsNotNull(impl, containsParentClass);
+    }
+
+    /**
+     * 检查所有属性不能存在null
+     * @param impl
+     * @param containsParentClass
+     * @return 所有属性不为空返回true
+     */
+    public static boolean isPropertiesNoneIsNotNull(Object impl, boolean containsParentClass) {
+        final Map<Field, Method> memberPublicMethods = ZlyReflectUtils.getMemberPublicMethods(impl.getClass(), containsParentClass);
+        try {
+            memberPublicMethods.forEach(new BiConsumer<Field, Method>() {
+                @SneakyThrows
+                @Override
+                public void accept(Field field, Method method) {
+                    Objects.requireNonNull(method.invoke(impl));
+                }
+            });
+        } catch (NullPointerException ig) {
+            return false;
+        }
+        return true;
+    }
 }
+

@@ -12,6 +12,7 @@ public class ZlyContentType {
     public static final String CONTENT_TYPE = HttpHeaders.CONTENT_TYPE;
     public static final String CONTENT_DISPOSITION =HttpHeaders.CONTENT_DISPOSITION ;
     public static final String CONTENT_DISPOSITION_VALUE = "attchment;filename=%s";
+    public static final String EXCEL_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     public static String contentDispositionValue(String filename) {
         return String.format(CONTENT_DISPOSITION_VALUE, ZlyHttpUtils.getUrlEncoder(filename));

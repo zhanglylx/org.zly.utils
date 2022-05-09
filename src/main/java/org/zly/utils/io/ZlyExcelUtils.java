@@ -11,7 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.zly.utils.ZlyReflectUtils;
+import org.zly.utils.function.ThreeFunction;
 import org.zly.utils.network.ZlyHttpUtils;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -94,12 +96,12 @@ public class ZlyExcelUtils {
     }
 
 
-    public static <T> void createExcelFile(HttpServletResponse response, List<T> dataList, Class<T> entityClass, boolean outputStreamClose, String fileName) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        fileName = ZlyHttpUtils.getUrlEncoder(fileName);
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        createExcelFile(dataList, entityClass, response.getOutputStream(), outputStreamClose);
-    }
+//    public static <T> void createExcelFile(HttpServletResponse response, List<T> dataList, Class<T> entityClass, boolean outputStreamClose, String fileName) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+//        fileName = ZlyHttpUtils.getUrlEncoder(fileName);
+//        response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+//        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+//        createExcelFile(dataList, entityClass, response.getOutputStream(), outputStreamClose);
+//    }
 
     public static <T> void createExcelFile(List<T> dataList, Class<T> entityClass, File saveFile) throws IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         createExcelFile(dataList, entityClass, saveFile, true);
@@ -166,11 +168,14 @@ public class ZlyExcelUtils {
         return style;
     }
 
-
     public static Map<Integer, Map<String, String>> getExcelXlsx(File file) {
+        return getExcelXlsx(file, null);
+    }
+
+    public static Map<Integer, Map<String, String>> getExcelXlsx(File file, ExcelReadFunction dataProcessor) {
         if (!file.exists()) throw new RuntimeException("文件不存在:" + file.getPath());
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            return getExcelXlsx(fileInputStream, 0);
+            return getExcelXlsx(fileInputStream, dataProcessor, 0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -202,13 +207,14 @@ public class ZlyExcelUtils {
         }
     }
 
+
     /**
      * 获取xlsx文件
      *
      * @param inputStream 输入流，这里未关闭输入流，需要用户关闭
      */
     @SuppressWarnings("unchecked")
-    public static Map<Integer, Map<String, String>> getExcelXlsx(InputStream inputStream, int sheetNum) {
+    public static Map<Integer, Map<String, String>> getExcelXlsx(InputStream inputStream, ExcelReadFunction dataProcessor, int sheetNum) {
 
         return useXlsxWorkbook(inputStream, new Function<Workbook, Map<Integer, Map<String, String>>>() {
             @Override
@@ -225,14 +231,36 @@ public class ZlyExcelUtils {
                 }
                 String title;
                 String value;
+                int index = 1;
+                boolean notBlank;
+                Row r;
+                Cell c;
                 for (int rowIndex = 1; rowIndex <= row; rowIndex++) {
                     valuesMap = new LinkedHashMap<>();
+                    notBlank = false;
                     for (int columnIndex = 0; columnIndex < column; columnIndex++) {
                         title = titles.get(columnIndex);
-                        value = getCellValue(xssfSheet, rowIndex, columnIndex);
+                        if (dataProcessor != null) {
+                            try {
+                                r = xssfSheet.getRow(rowIndex);
+                                c = null;
+                                if (r != null) c = r.getCell(columnIndex);
+                                value = dataProcessor.accept(title, rowIndex, columnIndex, valuesMap, xssfSheet, r, c);
+                            } catch (NullPointerException ignore) {
+                                value = "";
+                            }
+                        } else {
+                            value = getCellValue(xssfSheet, rowIndex, columnIndex);
+                        }
+                        if (StringUtils.isNotBlank(value)) notBlank = true;
                         valuesMap.put(title, value);
                     }
-                    rowMap.put(rowIndex - 1, valuesMap);
+//                    如果整行都是空的，则不插入
+                    if (!notBlank) {
+                        index--;
+                        continue;
+                    }
+                    rowMap.put(rowIndex - index, valuesMap);
                 }
                 return rowMap;
             }
@@ -240,17 +268,21 @@ public class ZlyExcelUtils {
     }
 
 
-    public static <T> List<T> getExcelXlsxByClass(File inputStream, Class<T> tClass) {
-        return getExcelXlsxByClass(inputStream, 0, tClass);
+    public static <T> List<T> getExcelXlsxByClass(File File, Class<T> tClass) {
+        return getExcelXlsxByClass(File, 0, null, tClass);
+    }
+
+    public static <T> List<T> getExcelXlsxByClass(File File, ExcelReadFunction dataProcessor, Class<T> tClass) {
+        return getExcelXlsxByClass(File, 0, dataProcessor, tClass);
     }
 
     @SneakyThrows
-    public static <T> List<T> getExcelXlsxByClass(File inputStream, int sheetNum, Class<T> tClass) {
-        return getExcelXlsxByClass(new FileInputStream(inputStream), sheetNum, tClass);
+    public static <T> List<T> getExcelXlsxByClass(File File, int sheetNum, ExcelReadFunction dataProcessor, Class<T> tClass) {
+        return getExcelXlsxByClass(new FileInputStream(File), sheetNum, dataProcessor, tClass);
     }
 
-    public static <T> List<T> getExcelXlsxByClass(InputStream inputStream, int sheetNum, Class<T> tClass) {
-        final Map<Integer, Map<String, String>> excelXlsx = getExcelXlsx(inputStream, sheetNum);
+    public static <T> List<T> getExcelXlsxByClass(InputStream inputStream, int sheetNum, ExcelReadFunction dataProcessor, Class<T> tClass) {
+        final Map<Integer, Map<String, String>> excelXlsx = getExcelXlsx(inputStream, dataProcessor, sheetNum);
         List<T> list = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         excelXlsx.forEach(new BiConsumer<Integer, Map<String, String>>() {
@@ -266,7 +298,7 @@ public class ZlyExcelUtils {
 
     private static String getCellValue(Sheet sheet, int rownum, int columnIndex) {
         Row row = sheet.getRow(rownum);
-        if (row == null) return "";
+        if (row == null) return null;
         Cell cell = row.getCell(columnIndex);
 //        如果是无法解析的CellType，使用CellType.valueOf将会报错，告知使用者
         if (cell != null) CellType.valueOf(cell.getCellType().name());
@@ -275,10 +307,11 @@ public class ZlyExcelUtils {
 
 
     public static void main(String[] args) throws IOException {
-        final File file = new File("C:\\Users\\Administrator\\Desktop\\11.xlsx");
-        final List<AA> excelXlsxByClass = ZlyExcelUtils.getExcelXlsxByClass(file, AA.class);
-        System.out.println(excelXlsxByClass);
-        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结.xlsx")), 0);
+        final File file = new File("C:\\Users\\Administrator\\Desktop\\sr_check\\标准-拆分表.xlsx");
+        ZlyExcelUtils.getExcelXlsx(file);
+//        final List<AA> excelXlsxByClass = ZlyExcelUtils.getExcelXlsxByClass(file, AA.class);
+//        System.out.println(excelXlsxByClass);
+//        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结.xlsx")), 0);
 
     }
 
