@@ -54,6 +54,11 @@ public class ZlyDateUtils {
         return new DateTime(standardDate).plusDays(day).toDate();
     }
 
+    public static Date plusHours(Date standardDate, int day) {
+        Objects.requireNonNull(standardDate);
+        return new DateTime(standardDate).plusHours(day).toDate();
+    }
+
 
     public static Date getDateFormat(String date, String format) {
         return getDateConversion(date, format);
@@ -179,6 +184,29 @@ public class ZlyDateUtils {
     public static boolean isSameDay(Date currentTime, Date checkDate, int currentTimeAddDay) {
         return DateUtils.isSameDay(DateUtils.addDays(currentTime, currentTimeAddDay), checkDate);
     }
+
+    /**
+     * 判断时间是不是在同一时刻，单位到小时
+     *
+     * @param currentTime
+     * @param checkDate
+     * @return
+     */
+    public static boolean isSameHourWithDay(Date currentTime, Date checkDate) {
+        return DateUtils.truncatedCompareTo(currentTime, checkDate, Calendar.HOUR_OF_DAY) == 0;
+    }
+
+    /**
+     * 判断时间是不是在同一时刻，单位到分
+     *
+     * @param currentTime
+     * @param checkDate
+     * @return
+     */
+    public static boolean isSameMinuteWithDay(Date currentTime, Date checkDate) {
+        return DateUtils.truncatedCompareTo(currentTime, checkDate, Calendar.MINUTE) == 0;
+    }
+
 
 
     /**
@@ -382,8 +410,5 @@ public class ZlyDateUtils {
         return dateTime.withDayOfMonth(1).toDate();
     }
 
-    public static void main(String[] args) {
-        System.out.println(ZlyDateUtils.getStrDefaultFormat(getFirstDayOfMonth(new Date())));
-    }
 
 }
