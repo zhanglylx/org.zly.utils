@@ -1,4 +1,4 @@
-package org.zly.utils.collection;
+package org.zly.utils.collection.list;
 
 import java.util.List;
 import java.util.Map;

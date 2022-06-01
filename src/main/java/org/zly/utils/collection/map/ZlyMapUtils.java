@@ -1,10 +1,9 @@
-package org.zly.utils.collection;
-
-import org.apache.commons.lang3.StringUtils;
+package org.zly.utils.collection.map;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
-public class MapUtils {
+public class ZlyMapUtils {
 
     /**
      * <p>检查maps中是否存在空<p/>
@@ -26,6 +25,25 @@ public class MapUtils {
     }
 
     /**
+     *
+     * @param key
+     * @param value
+     * @param map
+     * @param mapPutFunction
+     * @param <T>
+     * @param <V>
+     */
+    public static synchronized <T, V> void putSafe(T key, V value, Map<T, V> map, MapPutFunction<V> mapPutFunction) {
+        V temp = map.get(key);
+        if (temp == null) {
+            temp = value;
+        } else {
+            temp = mapPutFunction.apply(value,temp);
+        }
+        map.put(key, temp);
+    }
+
+    /**
      * 检查map是否为空
      *
      * @param map
@@ -35,5 +53,5 @@ public class MapUtils {
         return map == null || map.isEmpty();
     }
 
-
 }
+

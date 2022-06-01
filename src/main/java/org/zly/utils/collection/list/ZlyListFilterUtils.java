@@ -1,4 +1,4 @@
-package org.zly.utils.collection;
+package org.zly.utils.collection.list;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;

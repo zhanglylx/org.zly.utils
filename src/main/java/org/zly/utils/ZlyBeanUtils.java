@@ -1,24 +1,16 @@
 package org.zly.utils;
 
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.zly.utils.random.RandomDate;
 
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ZlyBeanUtils {
 
@@ -63,6 +55,35 @@ public class ZlyBeanUtils {
         return t;
     }
 
+
+    /**
+     * 使用深度优先搜索算法拷贝list
+     *
+     * @param source
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> copyPropertiesList(List<T> source) {
+        List<T> list = new ArrayList<>();
+        if (source == null) return null;
+        if (source.isEmpty()) return list;
+        for (T t : source) {
+            if (t == null) {
+                list.add(null);
+                continue;
+            }
+            if (t instanceof List) {
+                List<T> v = new ArrayList<>();
+                v.addAll(copyPropertiesList((List<T>) t));
+                list.add((T) v);
+            } else {
+                final Object o = copyProperties(t, t.getClass());
+                list.add((T) o);
+            }
+        }
+        return list;
+    }
+
     @SneakyThrows
     public static void copyProperties(Object source, Object target) {
         BeanUtils.copyProperties(source, target);
@@ -90,7 +111,7 @@ public class ZlyBeanUtils {
     }
 
     @SneakyThrows
-    public static <T> List<T> copyPropertiesIsCollection(Collection<?> source, Class<T> clazz) {
+    public static <T> List<T> copyPropertiesCollection(Collection<?> source, Class<T> clazz) {
         List<T> list = new ArrayList<>();
         for (Object o : source) {
             list.add(ZlyBeanUtils.copyProperties(o, clazz));
@@ -107,9 +128,10 @@ public class ZlyBeanUtils {
 
     /**
      * 检查任意一个属性是null
+     *
      * @param impl
      * @param containsParentClass
-     * @return  有一个属性为空则为true
+     * @return 有一个属性为空则为true
      */
     public static boolean isPropertiesAnyIsNull(Object impl, boolean containsParentClass) {
         return !isPropertiesNoneIsNotNull(impl, containsParentClass);
@@ -117,6 +139,7 @@ public class ZlyBeanUtils {
 
     /**
      * 检查所有属性不能存在null
+     *
      * @param impl
      * @param containsParentClass
      * @return 所有属性不为空返回true
@@ -135,6 +158,32 @@ public class ZlyBeanUtils {
             return false;
         }
         return true;
+    }
+
+    private static class Node {
+        private Object value;
+
+        public Node() {
+        }
+
+        public Node(Object value) {
+            this.value = value;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public void setValue(Object value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "value=" + value +
+                    '}';
+        }
     }
 }
 

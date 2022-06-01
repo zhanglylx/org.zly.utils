@@ -208,22 +208,25 @@ public class ZlyDateUtils {
     }
 
 
+    public static int getDayDiff(Date start, Date end) {
+    return getDayDiff(start,end,false);
+    }
 
-    /**
-     * 两个时间相差多少天
-     *
-     * @param smdate
-     * @param bdate
-     * @return
-     */
-    public static int getDayDiff(Date smdate, Date bdate, boolean abs) {
+        /**
+         * 两个时间相差多少天
+         *
+         * @param start
+         * @param end
+         * @return
+         */
+    public static int getDayDiff(Date start, Date end, boolean abs) {
 //        smdate = DateUtils.truncate(smdate, Calendar.DATE);
 //        bdate = DateUtils.truncate(bdate, Calendar.DATE);
 //        long bDay = bdate.getTime() / DateUtils.MILLIS_PER_DAY;
 //        long aDay = smdate.getTime() / DateUtils.MILLIS_PER_DAY;
 //        ChronoUnit.DAYS.between(starLocalDate, endLocalDate);
-        DateTime a = new DateTime(smdate);
-        DateTime b = new DateTime(bdate);
+        DateTime a = new DateTime(start);
+        DateTime b = new DateTime(end);
         int d = Days.daysBetween(a, b).getDays();
         return abs ? Math.abs(d) : d;
     }

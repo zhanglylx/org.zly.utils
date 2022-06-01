@@ -10,15 +10,23 @@ import java.util.List;
 public class ZlyRandomMobilePhone implements ZlyRandom<String> {
     @Override
     public String nextRandom() {
-        return "1" + ZlyRandomSetUtils.nextValue(new Integer[]{3, 5, 6, 7, 8, 9}) + ZlyRandomNumberUtils.nextLongLenth(9);
+        return ZlyRandomSetUtils.nextValue(PHONE_PREFIX) + ZlyRandomNumberUtils.nextLongLenth(8);
     }
 
+    public static void main(String[] args) {
+        System.out.println(new ZlyRandomMobilePhone().nextRandom());
+    }
     private static final List<String> PHONE_PREFIX = new ArrayList<>();
 
     static {
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                PHONE_PREFIX.add(1 + i + j + "");
+                stringBuilder.append(1);
+                stringBuilder.append(i);
+                stringBuilder.append(j);
+                PHONE_PREFIX.add(stringBuilder.toString());
+                stringBuilder.delete(0,3);
             }
         }
     }
