@@ -175,7 +175,7 @@ public class ZlyRandomNumberUtils {
 
     public static boolean isDoubleMantissaIsZero(BigDecimal bigDecimalValue, int scale) {
         if (scale == 0) return false;
-        String number = bigDecimalValue.toString();
+        String number = bigDecimalValue.setScale(scale,RoundingMode.DOWN).toString();
         return number.endsWith("0");
     }
 
@@ -213,6 +213,7 @@ public class ZlyRandomNumberUtils {
             randomBig = randomBig.add(BigDecimal.valueOf(ZlyRandomNumberUtils.nextLong(minPlaceValue, maxPlaceValue)));
             if (!mantissaIsZero) {
                 if (isDoubleMantissaNotZero(randomBig, scale)) return randomBig;
+                System.out.println("====");
             } else {
                 return randomBig;
             }
