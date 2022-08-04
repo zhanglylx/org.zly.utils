@@ -115,7 +115,7 @@ public class ZlyRandomCharacterUtils {
     }
 
     public static String nextMixtureExclude(int number, CharRandomType... charRandomType) {
-        if (charRandomType == null || charRandomType.length == 0) return nextMixture(charRandomType);
+        if (charRandomType == null || charRandomType.length == 0) return nextMixture(number);
         return nextMixture(number, ArrayUtils.removeElements(CharRandomType.values(), charRandomType));
     }
 
