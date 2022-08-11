@@ -2,6 +2,7 @@ package org.zly.utils.network;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.ServletServerHttpResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;

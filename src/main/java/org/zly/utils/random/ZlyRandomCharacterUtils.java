@@ -165,7 +165,9 @@ public class ZlyRandomCharacterUtils {
         return ZlyRandomStrTypeCache.MOBILE_PHONE.nextRandoms(number);
     }
 
-
+    public static void main(String[] args) {
+        System.out.println(ZlyRandomCharacterUtils.nextMixtureExclude(300));
+    }
 }
 
 
