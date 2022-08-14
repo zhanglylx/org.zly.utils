@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class ZlyContentType {
     public static final String APPLICATION_JSON_VALUE = MediaType.APPLICATION_JSON_UTF8_VALUE ;
+    public static final String APPLICATION_FORM_URLENCODED_VALUE = MediaType.APPLICATION_FORM_URLENCODED_VALUE+";charset=UTF-8" ;
     public static final String CONTENT_TYPE = HttpHeaders.CONTENT_TYPE;
     public static final String CONTENT_DISPOSITION =HttpHeaders.CONTENT_DISPOSITION ;
     public static final String CONTENT_DISPOSITION_VALUE = "attchment;filename=%s";

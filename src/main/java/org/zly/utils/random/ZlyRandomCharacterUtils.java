@@ -4,7 +4,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.zly.utils.random.character.CharRandomType;
 import org.zly.utils.random.type.*;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.util.*;
+import java.util.List;
 
 /**
  * 随机工具
@@ -166,8 +171,13 @@ public class ZlyRandomCharacterUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(ZlyRandomCharacterUtils.nextMixtureExclude(300));
+        final String s = ZlyRandomCharacterUtils.nextMixtureExclude(30000);
+        Transferable canonicalNameSelection = new StringSelection(s);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(canonicalNameSelection, null);
+        System.out.println(s);
     }
+
 }
 
 
