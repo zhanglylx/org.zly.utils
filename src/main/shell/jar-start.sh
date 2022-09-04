@@ -1,5 +1,5 @@
 #!/bin/bash
-#需要关闭和启动的java包
+#需要关闭和启动的java包  -j 指定jar包名称，不指定默认为-p下的第一个jar包   -p指定路径 不指定默认为当前路径
 app=''
 #项目的上级目录
 path=`pwd`
@@ -17,7 +17,7 @@ done
 if [[ ! $path =~ /$ ]]; then path=$path'/' ;fi
 if [ "$app" = "" ]; then
      echo app is null,The current directory is searched by default
-     app=`find $path -maxdepth 1  -name "*.jar"`
+     app=`find $path -maxdepth 1  -name "*.jar" | head -n 1`
      if [ "$app" = "" ]; then
        echo 没有找到当前目录下的jar: $path
        exit 1
