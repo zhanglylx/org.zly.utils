@@ -1,8 +1,8 @@
 package org.zly.utils.network;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.lang.reflect.ParameterizedType;

@@ -2,14 +2,18 @@ package org.zly.utils.uiauto.selenium;
 
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.zly.utils.collection.list.ZlyListFilterUtils;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Data
+@Slf4j
 public class ElementFilter {
     private RemoteWebDriver webDriver;
     private WebDriverWait webDriverWait;
@@ -65,12 +69,17 @@ public class ElementFilter {
      * @throws NoSuchElementException 如果没找到抛出
      */
     public WebElement byText(By by, String expected, int index) {
-        return ElementFindUtils.findByText(this.webDriver.findElements(by), expected, index);
+        return byTexts(by, expected).get(index);
+    }
+
+    public List<WebElement> byTexts(By by, String expected) {
+        return ElementFindUtils.findByTexts(this.webDriver.findElements(by), expected);
     }
 
     public WebElement byAttribute(By by, String attributeName, String attributeValue) {
-        return ElementFindUtils.findByAttribute(this.webDriver.findElements(by), attributeName, attributeValue, 0);
+        return byAttribute(by, attributeName, attributeValue, 0);
     }
+
 
     /**
      * 通过属性查找
@@ -82,7 +91,11 @@ public class ElementFilter {
      * @return
      */
     public WebElement byAttribute(By by, String attributeName, String attributeValue, int index) {
-        return ElementFindUtils.findByAttribute(this.webDriver.findElements(by), attributeName, attributeValue, index);
+        return byAttributes(by, attributeName, attributeValue).get(index);
+    }
+
+    public List<WebElement> byAttributes(By by, String attributeName, String attributeValue) {
+        return ElementFindUtils.findByAttributes(this.webDriver.findElements(by), attributeName, attributeValue);
     }
 
     public WebElement byAttributeWait(By by, String attributeName, String attributeValue) {
@@ -91,12 +104,16 @@ public class ElementFilter {
 
 
     public WebElement byAttributeWait(By by, String attributeName, String attributeValue, int index) {
-        return this.byCustomWait(by, new Predicate<WebElement>() {
+        return byAttributeWaits(by, attributeName, attributeValue).get(index);
+    }
+
+    public List<WebElement> byAttributeWaits(By by, String attributeName, String attributeValue) {
+        return this.byCustomWaits(by, new Predicate<WebElement>() {
             @Override
             public boolean test(WebElement webElement) {
-                return webElement.getAttribute(attributeName).equals(attributeValue);
+                return attributeValue.equals(webElement.getAttribute(attributeName));
             }
-        }, index);
+        });
     }
 
     /**
@@ -121,22 +138,70 @@ public class ElementFilter {
      * @throws NoSuchElementException 如果没找到抛出
      */
     public WebElement byTextWait(By by, String expected, int index) {
-        return this.byCustomWait(by, new Predicate<WebElement>() {
+        return byTextWaits(by, expected).get(index);
+    }
+
+    /**
+     * 通过元素text查找，如果查找不到，则报错
+     *
+     * @param by
+     * @param expected
+     * @throws NoSuchElementException 如果没找到抛出
+     */
+    public List<WebElement> byTextWaits(By by, String expected) {
+        return this.byCustomWaits(by, new Predicate<WebElement>() {
             @Override
             public boolean test(WebElement webElement) {
                 return webElement.getText().equals(expected);
             }
-        }, index);
-
+        });
     }
 
+    /**
+     * 通过元素text查找，如果查找不到，则报错
+     *
+     * @param by
+     * @param expected
+     * @return 符合的第 {@code index}个元素
+     * @throws NoSuchElementException 如果没找到抛出
+     */
+    public WebElement byContainTextWait(By by, String expected) {
+        return byContainTextWait(by, expected, 0);
+    }
+
+    /**
+     * 通过元素text查找，如果查找不到，则报错
+     *
+     * @param by
+     * @param expected
+     * @param index
+     * @return 符合的第 {@code index}个元素
+     * @throws NoSuchElementException 如果没找到抛出
+     */
+    public WebElement byContainTextWait(By by, String expected, int index) {
+        return byContainTextWaits(by, expected).get(index);
+    }
+
+    public List<WebElement> byContainTextWaits(By by, String expected) {
+        return this.byCustomWaits(by, new Predicate<WebElement>() {
+            @Override
+            public boolean test(WebElement webElement) {
+                return webElement.getText().contains(expected);
+            }
+        });
+    }
+
+
+    public WebElement byCustom(By by, Predicate<WebElement> consume) {
+        return byCustom(by, consume, 0);
+    }
 
     public WebElement byCustom(By by, Predicate<WebElement> consume, int index) {
         return ElementFindUtils.findByCustom(this.webDriver.findElements(by), consume, index);
     }
 
-    public WebElement byCustom(By by, Predicate<WebElement> consume) {
-        return ElementFindUtils.findByCustom(this.webDriver.findElements(by), consume, 0);
+    public List<WebElement> byCustoms(By by, Predicate<WebElement> consume) {
+        return ElementFindUtils.findByCustoms(this.webDriver.findElements(by), consume);
     }
 
     public WebElement byCustomWait(By by, Predicate<WebElement> consume) {
@@ -145,16 +210,30 @@ public class ElementFilter {
 
     public WebElement byCustomWait(By by, Predicate<WebElement> consume, int index) {
         try {
-            return this.webDriverWait.until(new Function<WebDriver, WebElement>() {
-                @Override
-                public WebElement apply(WebDriver webDriver) {
-                    return byCustom(by, consume, index);
-                }
-            });
+            return byCustomWaits(by, consume).get(index);
         } catch (TimeoutException exception) {
             throw new NoSuchElementException("查找的元素[" + by.toString() + "]" + ",索引坐标[" + index + "]");
         }
     }
 
+
+    public List<WebElement> byCustomWaits(By by, Predicate<WebElement> consume) {
+        try {
+            final List<WebElement> 本次没有等待到元素 = this.webDriverWait.until(new Function<WebDriver, List<WebElement>>() {
+                @Override
+                public List<WebElement> apply(WebDriver webDriver) {
+                    try {
+                        return byCustoms(by, consume);
+                    } catch (RuntimeException e) {
+                        log.debug("本次没有等待到元素", e);
+                        return null;
+                    }
+                }
+            });
+            return 本次没有等待到元素;
+        } catch (TimeoutException exception) {
+            throw new NoSuchElementException("查找的元素[" + by.toString() + "]");
+        }
+    }
 
 }

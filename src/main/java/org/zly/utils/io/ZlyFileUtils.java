@@ -1,8 +1,10 @@
 package org.zly.utils.io;
 
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -265,6 +267,7 @@ public class ZlyFileUtils {
 
     /**
      * 创建文件，如果目录不存在则自动创建目录后创建文件，也可以直接创建目录
+     *
      * @param file
      */
     @SneakyThrows
@@ -272,18 +275,37 @@ public class ZlyFileUtils {
         if (file.exists()) return;
         createDir(file.getParentFile());
         final boolean newFile = file.createNewFile();
-        if(!newFile)throw new RuntimeException("创建文件失败:"+file);
+        if (!newFile) throw new RuntimeException("创建文件失败:" + file);
     }
 
     public static void createDir(File file) {
         if (file.exists()) return;
         final boolean mkdirs = file.mkdirs();
-        if(!mkdirs)throw new RuntimeException("创建目录失败:"+file.getParentFile());
+        if (!mkdirs) throw new RuntimeException("创建目录失败:" + file.getParentFile());
     }
 
+    public static void getClassPathResource(String... paths) throws IOException {
+        for (String path : paths) {
+            getClassPathResource(path);
+        }
+    }
 
-    public static void main(String[] args) {
-        createFile(new File("llll/lll"));
+    public static void getClassPathResource(String path) throws IOException {
+        getClassPathResource(path, path);
+    }
+
+    public static File getClassPathResource(String copyPath, String path) throws IOException {
+        File inuModel = new File(copyPath);
+        Resource resource = new ClassPathResource(path);
+        if (!inuModel.getParentFile().exists()) {
+            if (!inuModel.getParentFile().mkdirs()) {
+                throw new IOException(copyPath + " create fail");
+            }
+        }
+        try (InputStream in = resource.getInputStream(); FileOutputStream out = new FileOutputStream(inuModel)) {
+            IOUtils.copy(in, out);
+        }
+        return inuModel;
     }
 
 

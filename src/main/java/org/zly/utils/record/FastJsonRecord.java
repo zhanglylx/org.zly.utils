@@ -1,9 +1,7 @@
 package org.zly.utils.record;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.PascalNameFilter;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.util.TypeUtils;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.filter.PascalNameFilter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +25,7 @@ public class FastJsonRecord {
         Map<String, Object> map = new HashMap<>();
         map.put("user", "ss");
         System.out.println(
-                JSONObject.toJSONString(map, new PascalNameFilter())
+//                JSONObject.toJSONString(map, new PascalNameFilter())
         );
 //        全局设置,针对javaBean
 //        TypeUtils.compatibleWithFieldName = true;
@@ -42,7 +40,7 @@ public class FastJsonRecord {
     public static void saveNullValue(){
         Map<String, Object> map = new HashMap<>();
         map.put("user", null);
-        System.out.println(JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
+//        System.out.println(JSONObject.toJSONString(map, SerializerFeature.WriteMapNullValue));
     }
 
     public static void main(String[] args) {

@@ -30,7 +30,7 @@ public class ZlyListFilterUtils {
      * @param predicate 筛选器
      * @return 符合条件的第一个元素，未找到则返回null
      */
-    public static <T> T findElement(List<T> elements, Predicate<T> predicate) {
+    public static <T> T findElementFirst(List<T> elements, Predicate<T> predicate) {
         Optional<T> first = elements.stream().filter(predicate).findFirst();
         return first.orElse(null);
     }
@@ -45,8 +45,7 @@ public class ZlyListFilterUtils {
      * @return 返回找到的元素，未找到返回 null
      */
     public static <T> T findElement(List<T> elements, Predicate<T> predicate, int index) {
-
-        List<T> list = elements.stream().filter(predicate).collect(Collectors.toList());
+        List<T> list = findElements(elements, predicate);
         return list.size() < index + 1 ? null : list.get(index);
     }
 
@@ -78,7 +77,7 @@ public class ZlyListFilterUtils {
                                                         Function<L, U> valueMapper,
                                                         ListGroupKeyFunction<K, U, List<L>> keyHandler,
                                                         Supplier<List<U>> initValueAccessor,
-                                                        ListGroupValueHandler<L,U> listGroupValueHandler) {
+                                                        ListGroupValueHandler<L, U> listGroupValueHandler) {
         Objects.requireNonNull(lists);
         Map<K, List<U>> map = new LinkedHashMap<>();
 
@@ -96,7 +95,7 @@ public class ZlyListFilterUtils {
             }
         });
         initValueAccessor = ObjectUtils.firstNonNull(initValueAccessor, ArrayList::new);
-        listGroupValueHandler = ObjectUtils.firstNonNull(listGroupValueHandler, new ListGroupValueHandler<L,U>() {
+        listGroupValueHandler = ObjectUtils.firstNonNull(listGroupValueHandler, new ListGroupValueHandler<L, U>() {
         });
         K key;
         U u;
@@ -109,14 +108,14 @@ public class ZlyListFilterUtils {
                 List<U> list = map.get(k);
                 if (list == null) {
                     list = initValueAccessor.get();
-                    list = listGroupValueHandler.before(list,l);
+                    list = listGroupValueHandler.before(list, l);
                     list.add(u);
                     map.put(k, list);
                 } else {
-                    list = listGroupValueHandler.before(list,l);
+                    list = listGroupValueHandler.before(list, l);
                     list.add(u);
                 }
-                List<U> after = listGroupValueHandler.after(list,l);
+                List<U> after = listGroupValueHandler.after(list, l);
                 if (after != list) map.put(k, after);
             }
         }

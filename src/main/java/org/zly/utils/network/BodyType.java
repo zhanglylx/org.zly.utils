@@ -1,6 +1,6 @@
 package org.zly.utils.network;
 
-import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson2.TypeReference;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

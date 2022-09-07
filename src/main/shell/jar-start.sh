@@ -1,17 +1,27 @@
 #!/bin/bash
-#需要关闭和启动的java包  -j 指定jar包名称，不指定默认为-p下的第一个jar包   -p指定路径 不指定默认为当前路径
+echo 开始执行jar启动脚本 "$(date "+%Y-%m-%d %H:%M:%S")"
+#需要关闭和启动的java包  -j 指定jar包名称，不指定默认为-p下的第一个jar包   -p指定路径 不指定默认为当前路径 -v 参数
 app=''
 #项目的上级目录
 path=`pwd`
-while getopts ":j:p:" opt
+#jar启动参数   -Duser.timezone=GMT+8 -Dspring.profiles.active=prod
+startupParameters=' -Duser.timezone=GMT+8 '
+while getopts ":j:p:v:" opt
  do
   case $opt in
       j)
       app="$OPTARG";;
       p)
       path="$OPTARG";;
+      v)
+        tem="$OPTARG";
+        startupParameters=$startupParameters$tem
+        if [[ $tem =~ .*-Duser\.timezone=.+ ]];then
+          startupParameters=$tem
+        fi;;
       *)
-      echo "$OPTARG 无效参数";;
+      echo "$OPTARG 无效参数"
+      exit 1;;
   esac
 done
 if [[ ! $path =~ /$ ]]; then path=$path'/' ;fi
@@ -23,7 +33,7 @@ if [ "$app" = "" ]; then
        exit 1
      fi
      #去除前缀目录
-     app=${app: ${#path}}
+     app=${app:${#path}}
 fi
 if [[ ! $app =~ '.jar'$ ]]; then app=$app'.jar' ;fi
 
@@ -47,8 +57,6 @@ then
 fi
 consoleLog="$consolePath"console-"$startTime".log
 echo '日志路径:' "$consoleLog"
-#jar启动参数
-startupParameters='-Duser.timezone=GMT+8 -Dspring.profiles.active=prod'
 #若项目已启动，杀死旧进程
 api_pid=`ps -ef | grep "$java" | grep -v grep | awk '{print $2}'`
 if [ "$api_pid" != "" ]; then
@@ -68,3 +76,5 @@ fi
 echo starting "【nohup java -jar  $startupParameters $java >> $consoleLog 2>&1 &】"
 #后台进程形式启动项目
 nohup java -jar  $startupParameters $java >> $consoleLog 2>&1 &
+echo 脚本执行结束 "$(date "+%Y-%m-%d %H:%M:%S")"
+echo ""

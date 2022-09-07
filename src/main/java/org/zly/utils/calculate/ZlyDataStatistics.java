@@ -1,4 +1,4 @@
-package org.zly.utils;
+package org.zly.utils.calculate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

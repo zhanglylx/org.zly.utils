@@ -171,7 +171,7 @@ public class ZlyRandomCharacterUtils {
     }
 
     public static void main(String[] args) {
-        final String s = ZlyRandomCharacterUtils.nextMixtureExclude(30000);
+        final String s = ZlyRandomCharacterUtils.nextMixture(1000);
         Transferable canonicalNameSelection = new StringSelection(s);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(canonicalNameSelection, null);
