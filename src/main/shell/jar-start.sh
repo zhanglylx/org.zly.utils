@@ -75,6 +75,8 @@ fi
 
 echo starting "【nohup java -jar  $startupParameters $java >> $consoleLog 2>&1 &】"
 #后台进程形式启动项目
+如果jenkins执行，要防止后台启动的程序执行完被关闭掉
+JENKINS_NODE_COOKIE=dontKIllMe
 nohup java -jar  $startupParameters $java >> $consoleLog 2>&1 &
 echo 脚本执行结束 "$(date "+%Y-%m-%d %H:%M:%S")"
 echo ""
