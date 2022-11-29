@@ -53,7 +53,7 @@ fi
 #拉取
 docker login -u admin -p 12345 $horbar_addr
 docker pull $imageName
-docker run -d -p $container_port:$host_port --name $project $imageName
+docker run --restart=always -d -p $container_port:$host_port --name $project $imageName
 echo docker run --restart=always -d -p $container_port:$host_port --name $project $imageName
 containerId=`docker ps  | grep "$project"  | awk '{print $1 }'`
 if [ "$containerId" == "" ] ; then
