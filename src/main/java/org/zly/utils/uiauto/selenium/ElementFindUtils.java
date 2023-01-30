@@ -1,10 +1,7 @@
 package org.zly.utils.uiauto.selenium;
 
-import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.zly.utils.collection.list.ZlyListFilterUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.zly.utils.collection.list.ZlyListFilterUtils;
 
 /**
  * @author zhanglianyu
