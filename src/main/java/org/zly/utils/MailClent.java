@@ -3,14 +3,17 @@ package org.zly.utils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.zly.utils.io.ZlyFileUtils;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 @Data
@@ -28,10 +31,7 @@ public class MailClent {
     private static final long FILE_MAX_SIZE = 45 * 1024 * 1024L;
     private static final String CHARSET = "UTF-8";
 
-    public static void main(String[] args) {
-//        MailClent mailClent = new MailClent("zhanglianyu@sunwiseinfo.com", "zhanglianyu@sunwiseinfo.com", "QV3HuLjzHKp9Zxr4", "smtp.mxhichina.com",null);
-//        mailClent.setCarbonCopyAddress(new String[]{"wengfei@sunwiseinfo.com", "huangmeichun@sunwiseinfo.com"});
-//        mailClent.sendMail("脚本测试发邮件test", "test");
+    public static void main(String[] args) throws IOException {
     }
 
     public MailClent(String senderAddress, String senderAccount, String senderPassword, String mailSmtpHost, String[] recipientAddress) {

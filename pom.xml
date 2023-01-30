@@ -30,6 +30,14 @@
         <!--            <artifactId>servlet-api</artifactId>-->
         <!--            <version>2.5</version>-->
         <!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/net.shibboleth.tool/xmlsectool -->
+        <dependency>
+            <groupId>net.shibboleth.tool</groupId>
+            <artifactId>xmlsectool</artifactId>
+            <version>2.0.0-beta-2</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -102,4 +110,16 @@
                 </plugin>
             </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>org-zly-utils-releases</name>
+            <url>http://192.168.248.136:8081/repository/maven-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>org-zly-utils-snapshots</name>
+            <url>http://192.168.248.136:8081/repository/maven-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

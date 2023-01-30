@@ -1,5 +1,6 @@
 package org.zly.utils.io;
 
+import javafx.scene.effect.ImageInputBuilder;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -144,7 +145,7 @@ public class ZlyFileUtils {
     }
 
     /**
-     * 遍历目录下的文件
+     * 遍历目录下的文件和文件夹
      *
      * @param file
      * @param fileConsumer

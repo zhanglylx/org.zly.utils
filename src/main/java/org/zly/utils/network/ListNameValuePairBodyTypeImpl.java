@@ -13,23 +13,23 @@ import java.util.function.BiConsumer;
  * @version 1.0
  * @date 2021/8/16 19:43
  */
-public class ListNameValuePairBodyYypeImpl extends AbstractBodyType<List<NameValuePair>> {
+public class ListNameValuePairBodyTypeImpl extends AbstractBodyType<List<NameValuePair>> {
 
     private boolean nullFilling = false;
 
     private String nullFillingValue = null;
 
-    public ListNameValuePairBodyYypeImpl(Class<?> templateClass, boolean nullFilling) {
+    public ListNameValuePairBodyTypeImpl(Class<?> templateClass, boolean nullFilling) {
         this(templateClass, nullFilling, null);
     }
 
-    public ListNameValuePairBodyYypeImpl(Class<?> templateClass, boolean nullFilling, String nullFillingValue) {
+    public ListNameValuePairBodyTypeImpl(Class<?> templateClass, boolean nullFilling, String nullFillingValue) {
         this(templateClass);
         this.nullFilling = nullFilling;
         this.nullFillingValue = nullFillingValue;
     }
 
-    public ListNameValuePairBodyYypeImpl(Class<?> templateClass) {
+    public ListNameValuePairBodyTypeImpl(Class<?> templateClass) {
         super(templateClass);
     }
 

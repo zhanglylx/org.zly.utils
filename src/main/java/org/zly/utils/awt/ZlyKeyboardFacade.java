@@ -1,8 +1,6 @@
 package org.zly.utils.awt;
 
 import org.apache.commons.lang3.StringUtils;
-import org.zly.utils.awt.ZlyKeyboardHandler;
-import org.zly.utils.io.ZlyWindosUtils;
 
 import java.awt.event.KeyEvent;
 
@@ -11,7 +9,7 @@ import java.awt.event.KeyEvent;
  * @date 2022-08-29 16:15
  */
 public class ZlyKeyboardFacade {
-    public static int INTERVAL_TIME = 500;
+    public static int INTERVAL_TIME = 300;
 
     public static void downAndEnter() {
         downAndEnter(1);

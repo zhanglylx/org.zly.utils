@@ -123,7 +123,7 @@ public class WindowSwitching {
     public void openNewLabel(String url) {
         if (StringUtils.isBlank(this.webDriver.getWindowHandle())) {
             this.webDriver.get(url);
-        }else{
+        } else {
             this.newLabelHandler(new Consumer<RemoteWebDriver>() {
                 @Override
                 public void accept(RemoteWebDriver remoteWebDriver) {
