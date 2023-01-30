@@ -31,12 +31,12 @@
         <!--            <version>2.5</version>-->
         <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/net.shibboleth.tool/xmlsectool -->
-        <dependency>
-            <groupId>net.shibboleth.tool</groupId>
-            <artifactId>xmlsectool</artifactId>
-            <version>2.0.0-beta-2</version>
-            <scope>runtime</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.shibboleth.tool</groupId>-->
+<!--            <artifactId>xmlsectool</artifactId>-->
+<!--            <version>2.0.0-beta-2</version>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
 
     </dependencies>
 
