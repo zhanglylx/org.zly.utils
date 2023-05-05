@@ -144,6 +144,15 @@ public class ZlyFileUtils {
         });
     }
 
+    public static void main(String[] args) {
+       traversalFolderFile(new File("E:\\test_group\\org-zly-utils\\src\\main\\java"), new Consumer<File>() {
+            @Override
+            public void accept(File file) {
+                System.out.println(file);
+            }
+        });
+    }
+
     /**
      * 遍历目录下的文件和文件夹
      *

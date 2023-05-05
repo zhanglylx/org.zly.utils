@@ -214,6 +214,22 @@ public class ZLYStringUtils {
         return String.valueOf(arr);
     }
 
+    public static void main(String[] args) {
+        System.out.println(strHashAscSort("qwertyuio"));
+        System.out.println(strHashAscSort("oiuytrewq"));
+        String a = "北京轩宇信息测试";
+        String b = "测试asdfsakdfsndafkds京afk北ds轩宇信息sdsfsdfdsfdsfdsf";
+        System.out.println(a);
+        System.out.println(b);
+        System.out.println(b.length());
+        System.out.println(ldStr(strHashAscSort(a),strHashAscSort(b)));
+//        System.out.println(sim("北京轩宇信息测试","北京轩宇信息"));
+//        System.out.println(74/64);
+//        if(b.contains(a));
+//        final int i = ldStr(a, b);
+//        if(i+a.length() == b)true;
+//        if((b.length()-i)/a)>0.9;
+    }
 
     /**
      * @param preNumber 前缀
