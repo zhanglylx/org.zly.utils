@@ -1,0 +1,27 @@
+#!/bin/bash/env bash
+source ./get-constant
+function getArchitecture() {
+  : ${systemArchitecture="1"}
+  if [ $systemArchitecture != "1" ]; then
+    return 0
+  fi
+  set +e
+  systemArchitecture=$(arch)
+  set -e
+  if [ $? -ne 0 ]; then
+    systemArchitecture=$(uname -a)
+  fi
+  #  正则匹配架构
+  if [[ $systemArchitecture =~ ^x86.+ ]]; then
+    echo 系统架构为$systemArchitecture
+    export systemArchitecture=$finalArchitectureX86
+    readonly systemArchitecture
+    return 0
+  fi
+
+}
+function getSystemVersion() {
+  :
+}
+getArchitecture
+echo $systemArchitecture
