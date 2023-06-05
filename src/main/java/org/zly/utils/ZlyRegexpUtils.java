@@ -21,7 +21,7 @@ public final class ZlyRegexpUtils {
      * <p>
      * 不匹配: foo@bar 或 $$$@bar.com
      */
-    public static final String EMAIL_REGEXP = "^([a-zA-Z0-9]+[-|\\_|\\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-|\\_|\\.]?)*[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$";
+    public static final String EMAIL_REGEXP = "^([a-zA-Z0-9]+[-|_.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[-|_.]?)*[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$";
     /**
      * 匹配并提取url
      * <p>
@@ -32,7 +32,7 @@ public final class ZlyRegexpUtils {
      * <p>
      * 不匹配: c:/window
      */
-    public static final String URL_REGEXP = "(//w+)://([^/:]+)(://d*)?([^#//s]*)";
+    public static final String URL_REGEXP = "(\\w+)://([^/:]+)(:\\d*)?([^#\\s]*)";
     /**
      * 匹配并提取http
      * <p>
@@ -42,7 +42,7 @@ public final class ZlyRegexpUtils {
      * <p>
      * 不匹配: news://www
      */
-    public static final String HTTP_REGEXP = "(http|https|ftp)://([^/:]+)(://d*)?([^#//s]*)";
+    public static final String HTTP_REGEXP = "(http|https|ftp)://([^/:]+)(:\\d*)?([^#\\s]*)";
     /**
      * 匹配并提取http
      * <p>
@@ -53,6 +53,11 @@ public final class ZlyRegexpUtils {
      * 不匹配: news://www
      */
     public static final String HTTP_REGEXP_BANNER = "((https|http|ftp|rtsp|mms)?://)([0-9a-z_!~*'()-]+\\.)*([a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(\\.[a-zA-Z]{1,4})(:[0-9]{1,4})?((/?)|(/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+/?)\\.?$";
+
+    public static void main(String[] args) {
+        System.out.println("foo.e@bar.com".matches(EMAIL_REGEXP));
+    }
+
     /**
      * 匹配日期
      * <p>
@@ -141,7 +146,7 @@ public final class ZlyRegexpUtils {
      * 不匹配: 1111-134355 或 0123456789
      */
     public static final String PHONE_REGEXP =
-            "^(?:0[0-9]{2,3}[-//s]{1}|//(0[0-9]{2,4}//))[0-9]{6,8}$|^[1-9]{1}[0-9]{5,7}$|^[1-9]{1}[0-9]{10}$";
+            "^(?:0[0-9]{2,3}[-\\s]{1}|\\(0[0-9]{2,4}\\))[0-9]{6,8}$|^[1-9]{1}[0-9]{5,7}$|^[1-9]{1}[0-9]{10}$";
 
     /**
      * 11位手机号格式验证
@@ -186,13 +191,26 @@ public final class ZlyRegexpUtils {
     public static final String ZIP_REGEXP = "^[0-9]{6}$";
 
     /**
+     * 匹配IP地址,匹配规则：判断有4个点，每个点中是数字（一个或多个数字）
+     * <p>
+     * 格式为: xxx.xxx.xxx.xxx
+     * <p>
+     * 匹配 : 192.168.0.1
+     * 匹配 : 192.168.10.22
+     * 匹配 : 0000.000.000.0000
+     * <p>
+     * 不匹配: 0123456
+     */
+    public static final String IP_ADDRESS_REGEXP = "^(\\d+\\.){3}\\d+$";
+
+    /**
      * 不包括特殊字符的匹配 (字符串中不包括符号 数学次方号^ 单引号' 双引号" 分号; 逗号, 帽号: 数学减号- 右尖括号> 左尖括号< 反斜杠/ 即空格,制表符,回车符等 )
      * <p>
      * 格式为: x 或 一个一上的字符
      * <p>
      * 匹配 : 012345
      * <p>
-     * 不匹配: 0123456 // ;,:-<>//s].+$";//
+     * 不匹配: 0123456 \\ ;,:-<>\\s].+$";\\
      */
     public static final String NON_SPECIAL_CHAR_REGEXP = "^[^'/";
 
@@ -243,7 +261,8 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配非负整数（正整数 + 0)
      */
-    public static final String NON_NEGATIVE_INTEGERS_REGEXP = "^//d+$";
+    public static final String NON_NEGATIVE_INTEGERS_REGEXP = "^\\d+$";
+
     /**
      * 匹配带1位小数且不超过2位的数
      */
@@ -255,7 +274,7 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配不包括零的非负整数（正整数 > 0)
      */
-    public static final String NON_ZERO_NEGATIVE_INTEGERS_REGEXP = "^[1-9]+//d*$";
+    public static final String NON_ZERO_NEGATIVE_INTEGERS_REGEXP = "^[1-9]+\\d*$";
     /**
      * 匹配包括零的正整数
      */
@@ -267,7 +286,7 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配非正整数（负整数 + 0）
      */
-    public static final String NON_POSITIVE_INTEGERS_REGEXP = "^((-//d+)|(0+))$";
+    public static final String NON_POSITIVE_INTEGERS_REGEXP = "^((-\\d+)|(0+))$";
     /**
      * 匹配负整数
      */
@@ -275,7 +294,7 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配整数
      */
-    public static final String INTEGER_REGEXP = "^-?//d+$";
+    public static final String INTEGER_REGEXP = "^-?\\d+$";
     /**
      * 匹配非负浮点数（正浮点数 + 0）
      */
@@ -291,17 +310,17 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配非正浮点数（负浮点数 + 0）
      */
-    public static final String NON_POSITIVE_RATIONAL_NUMBERS_REGEXP = "^((-//d+(//.//d+)?)|(0+(//.0+)?))$";
+    public static final String NON_POSITIVE_RATIONAL_NUMBERS_REGEXP = "^((-\\d+(\\.\\d+)?)|(0+(\\.0+)?))$";
     /**
      * 匹配负浮点数
      */
     public static final String NEGATIVE_RATIONAL_NUMBERS_REGEXP =
-            "^(-(([0-9]+//.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*//.[0-9]+)|([0-9]*[1-9][0-9]*)))$";
+            "^(-(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*)))$";
 
     /**
      * 匹配浮点数
      */
-    public static final String RATIONAL_NUMBERS_REGEXP = "^(-?//d+)(//.//d+)?$";
+    public static final String RATIONAL_NUMBERS_REGEXP = "^(-?\\d+)(\\.\\d+)?$";
     /**
      * 匹配由26个英文字母组成的字符串
      */
@@ -329,7 +348,7 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配由数字、26个英文字母或者下划线组成的字符串
      */
-    public static final String LETTER_NUMBER_UNDERLINE_REGEXP = "^//w+$";
+    public static final String LETTER_NUMBER_UNDERLINE_REGEXP = "^\\w+$";
     /**
      * 必须由数字和26个英文字母组合组成的字符串
      */
