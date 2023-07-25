@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-finalPackgePath="./"
-finalinstallPath="/data/deployment/"
-finalJavaLinuxX86PackagePath=$finalPackgePath"linux/x86/jdk-8u361-linux-aarch64.tar.gz"
-finalArchitectureX86="x86"

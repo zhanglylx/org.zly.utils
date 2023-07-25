@@ -2,11 +2,7 @@ package org.zly.utils.calculate;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.util.Base64;
 
 /**
@@ -19,7 +15,12 @@ public class SymmetricEncryption {
     private final String algorithm;
     private final Cipher cipher;
     private final Key key;
-    public static final String ALGORITHM="AES";
+    public static final String ALGORITHM = "AES";
+
+    public SymmetricEncryption(Key key) {
+        this(ALGORITHM, key);
+    }
+
     public SymmetricEncryption(String algorithm, Key key) {
         this.algorithm = algorithm;
         try {
@@ -30,21 +31,26 @@ public class SymmetricEncryption {
         this.key = key;
     }
 
+    public SymmetricEncryption(byte[] key) {
+        this(ALGORITHM, key);
+    }
+
     public SymmetricEncryption(String algorithm, byte[] key) {
         this(algorithm, new SecretKeySpec(key, algorithm));
     }
 
-    //    public static void main(String[] args) throws NoSuchAlgorithmException {
-//        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-//        keyGenerator.init(256);
-//        final String algorithm = keyGenerator.getAlgorithm();
-//        final SecretKey secretKey = keyGenerator.generateKey();
-//        KeyStore keyStore = KeyStore.getInstance("")
-//    }
-    public SecretKey generateSecretKey() {
+    public static void main(String[] args) {
+
+    }
+
+    public static SecretKey generateSecretKey() {
+        return generateSecretKey(SymmetricEncryption.ALGORITHM);
+    }
+
+    public static SecretKey generateSecretKey(String algorithm) {
         KeyGenerator keyGenerator = null;
         try {
-            keyGenerator = KeyGenerator.getInstance(this.algorithm);
+            keyGenerator = KeyGenerator.getInstance(algorithm);
             keyGenerator.init(256);
             return keyGenerator.generateKey();
         } catch (NoSuchAlgorithmException e) {

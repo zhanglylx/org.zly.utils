@@ -42,7 +42,12 @@ public final class ZlyRegexpUtils {
      * <p>
      * 不匹配: news://www
      */
-    public static final String HTTP_REGEXP = "(http|https|ftp)://([^/:]+)(:\\d*)?([^#\\s]*)";
+    public static final String HTTP_REGEXP = "^(http|https|ftp)://.+$";
+
+    public static void main(String[] args) {
+        System.out.println("http://ww^%RRTRET#)#(w.suncer.com".matches(HTTP_REGEXP));
+    }
+
     /**
      * 匹配并提取http
      * <p>
@@ -54,9 +59,6 @@ public final class ZlyRegexpUtils {
      */
     public static final String HTTP_REGEXP_BANNER = "((https|http|ftp|rtsp|mms)?://)([0-9a-z_!~*'()-]+\\.)*([a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(\\.[a-zA-Z]{1,4})(:[0-9]{1,4})?((/?)|(/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+/?)\\.?$";
 
-    public static void main(String[] args) {
-        System.out.println("foo.e@bar.com".matches(EMAIL_REGEXP));
-    }
 
     /**
      * 匹配日期
@@ -227,100 +229,100 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配一位数的0-2整数
      */
-    public static final String ZERO__TO_THREE_NUMBER = "[0-3]$";
+    public static final String NUMBER_ZERO__TO_THREE_NUMBER = "[0-3]$";
     /**
      * 匹配一位数的1-4的非负整数
      */
-    public static final String ONE__TO_FOUR_NATURAL_NUMBER = "[1-4]$";
+    public static final String NUMBER_ONE__TO_FOUR_NATURAL_NUMBER = "[1-4]$";
     /**
      * 匹配一位数的0-4的非负整数
      */
-    public static final String ZERO__TO_FOUR_NATURAL_NUMBER = "[0-4]$";
+    public static final String NUMBER_ZERO__TO_FOUR_NATURAL_NUMBER = "[0-4]$";
     /**
      * 匹配一位数的1-3的非负整数
      */
-    public static final String ONE_TO_THREE_NATURAL_NUMBER = "[1-3]$";
+    public static final String NUMBER_ONE_TO_THREE_NATURAL_NUMBER = "[1-3]$";
     /**
      * 匹配一位数的1-3的非负整数
      */
-    public static final String ONE__TO_TWO_NATURAL_NUMBER = "[1-3]$";
+    public static final String NUMBER_ONE__TO_TWO_NATURAL_NUMBER = "[1-3]$";
     /**
      * 匹配一位数的1-6的非负整数
      */
-    public static final String ONE__TO_SIX_NATURAL_NUMBER = "[1-6]$";
+    public static final String NUMBER_ONE__TO_SIX_NATURAL_NUMBER = "[1-6]$";
     /**
      * 匹配0-18的正整数
      */
-    public static final String ONE_TO_EIGHTEEN_NUMBER = "^(18|[0-9]|(1[0-8]))$";
+    public static final String NUMBER_ONE_TO_EIGHTEEN_NUMBER = "^(18|[0-9]|(1[0-8]))$";
 
     /**
      * 匹配1-99的正整数
      */
-    public static final String ONE_TO_NINETYNINE_NUMBER = "^(99|[1-9]|([1-9][0-9]))$";
+    public static final String NUMBER_ONE_TO_NINETYNINE_NUMBER = "^(99|[1-9]|([1-9][0-9]))$";
 
     /**
      * 匹配非负整数（正整数 + 0)
      */
-    public static final String NON_NEGATIVE_INTEGERS_REGEXP = "^\\d+$";
+    public static final String NUMBER_NON_NEGATIVE_INTEGERS_REGEXP = "^\\d+$";
 
     /**
      * 匹配带1位小数且不超过2位的数
      */
-    public static final String CAR_LENGTH_REGEXP = "^(\\d|\\d\\d)(\\.\\d)?$";
+    public static final String NUMBER_CAR_LENGTH_REGEXP = "^(\\d|\\d\\d)(\\.\\d)?$";
     /**
      * 匹配整数位最大3位且小数位最大2位的数
      */
-    public static final String CAR_LOAD_REGEXP = "^(\\d{1,3})(\\.\\d{1,2})?$";
+    public static final String NUMBER_CAR_LOAD_REGEXP = "^(\\d{1,3})(\\.\\d{1,2})?$";
     /**
      * 匹配不包括零的非负整数（正整数 > 0)
      */
-    public static final String NON_ZERO_NEGATIVE_INTEGERS_REGEXP = "^[1-9]+\\d*$";
+    public static final String NUMBER_NON_ZERO_NEGATIVE_INTEGERS_REGEXP = "^[1-9]+\\d*$";
     /**
      * 匹配包括零的正整数
      */
-    public static final String ZERO_NEGATIVE_INTEGERS_REGEXP = "^[0-9]*[0-9][0-9]*$";
+    public static final String NUMBER_ZERO_NEGATIVE_INTEGERS_REGEXP = "^[0-9]*[0-9][0-9]*$";
     /**
      * 匹配正整数
      */
-    public static final String POSITIVE_INTEGER_REGEXP = "^[0-9]*[1-9][0-9]*$";
+    public static final String NUMBER_POSITIVE_INTEGER_REGEXP = "^[0-9]*[1-9][0-9]*$";
     /**
      * 匹配非正整数（负整数 + 0）
      */
-    public static final String NON_POSITIVE_INTEGERS_REGEXP = "^((-\\d+)|(0+))$";
+    public static final String NUMBER_NON_POSITIVE_INTEGERS_REGEXP = "^((-\\d+)|(0+))$";
     /**
      * 匹配负整数
      */
-    public static final String NEGATIVE_INTEGERS_REGEXP = "^-[0-9]*[1-9][0-9]*$";
+    public static final String NUMBER_NEGATIVE_INTEGERS_REGEXP = "^-[0-9]*[1-9][0-9]*$";
     /**
      * 匹配整数
      */
-    public static final String INTEGER_REGEXP = "^-?\\d+$";
+    public static final String NUMBER_INTEGER_REGEXP = "^-?\\d+$";
     /**
      * 匹配非负浮点数（正浮点数 + 0）
      */
-    public static final String NON_NEGATIVE_RATIONAL_NUMBERS_REGEXP = "^\\d+(\\.\\d+)?$";
+    public static final String NUMBER_NON_NEGATIVE_RATIONAL_NUMBERS_REGEXP = "^\\d+(\\.\\d+)?$";
     /**
      * 匹配正浮点数
      */
-    public static final String POSITIVE_RATIONAL_NUMBERS_REGEXP = "^[0-9]+(.[0-9]{1})?$";
+    public static final String NUMBER_POSITIVE_RATIONAL_NUMBERS_REGEXP = "^[0-9]+(.[0-9]{1})?$";
     /**
      * 匹配正浮点数(1-6位)
      */
-    public static final String POSITIVE_ONE_TO_SIX_RATIONAL_NUMBERS_REGEXP = "^((?!0\\d)\\d+(\\.\\d{1,6}?))$";
+    public static final String NUMBER_POSITIVE_ONE_TO_SIX_RATIONAL_NUMBERS_REGEXP = "^((?!0\\d)\\d+(\\.\\d{1,6}?))$";
     /**
      * 匹配非正浮点数（负浮点数 + 0）
      */
-    public static final String NON_POSITIVE_RATIONAL_NUMBERS_REGEXP = "^((-\\d+(\\.\\d+)?)|(0+(\\.0+)?))$";
+    public static final String NUMBER_NON_POSITIVE_RATIONAL_NUMBERS_REGEXP = "^((-\\d+(\\.\\d+)?)|(0+(\\.0+)?))$";
     /**
      * 匹配负浮点数
      */
-    public static final String NEGATIVE_RATIONAL_NUMBERS_REGEXP =
+    public static final String NUMBER_NEGATIVE_RATIONAL_NUMBERS_REGEXP =
             "^(-(([0-9]+\\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\\.[0-9]+)|([0-9]*[1-9][0-9]*)))$";
 
     /**
      * 匹配浮点数
      */
-    public static final String RATIONAL_NUMBERS_REGEXP = "^(-?\\d+)(\\.\\d+)?$";
+    public static final String NUMBER_RATIONAL_NUMBERS_REGEXP = "^(-?\\d+)(\\.\\d+)?$";
     /**
      * 匹配由26个英文字母组成的字符串
      */
@@ -356,31 +358,31 @@ public final class ZlyRegexpUtils {
     /**
      * 匹配5位数字
      */
-    public static final String FIVE_NUMBER_ONLY_REGEXP = "^[0-9]{5}$";
+    public static final String NUMBER_FIVE_NUMBER_ONLY_REGEXP = "^[0-9]{5}$";
     /**
      * 匹配4位数字
      */
-    public static final String FOUR_NUMBER_ONLY_REGEXP = "^[0-9]{4}$";
+    public static final String NUMBER_FOUR_NUMBER_ONLY_REGEXP = "^[0-9]{4}$";
     /**
      * 匹配1位字母
      */
-    public static final String ONE_LETTER = "^[a-zA-Z]{1}$";
+    public static final String NUMBER_ONE_LETTER = "^[a-zA-Z]{1}$";
     /**
      * 匹配19位数字
      */
-    public static final String NINETEEN_NUMBER_ONLY_REGEXP = "^[0-9]{19}$";
+    public static final String NUMBER_NINETEEN_NUMBER_ONLY_REGEXP = "^[0-9]{19}$";
     /**
      * 匹配8位数字
      */
-    public static final String EIGHT_NUMBER_ONLY_REGEXP = "^[0-9]{8}$";
+    public static final String NUMBER_EIGHT_NUMBER_ONLY_REGEXP = "^[0-9]{8}$";
     /**
      * 匹配19位数字
      */
-    public static final String TWENTY_NUMBER_ONLY_REGEXP = "^[0-9]{20}$";
+    public static final String NUMBER_TWENTY_NUMBER_ONLY_REGEXP = "^[0-9]{20}$";
     /**
      * 匹配1位数字
      */
-    public static final String NUMBER_ONLY_ONE_REGEXP = "^\\d$";
+    public static final String NUMBER_NUMBER_ONLY_ONE_REGEXP = "^\\d$";
     /**
      * 匹配日期
      * <p>

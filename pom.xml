@@ -110,16 +110,16 @@
                 </plugin>
             </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>org-zly-utils-releases</name>
-            <url>http://192.168.248.136:8081/repository/maven-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>org-zly-utils-snapshots</name>
-            <url>http://192.168.248.136:8081/repository/maven-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <name>org-zly-utils-releases</name>-->
+<!--            <url>http://192.168.248.136:8081/repository/maven-releases</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <name>org-zly-utils-snapshots</name>-->
+<!--            <url>http://192.168.248.136:8081/repository/maven-snapshots</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
 </project>

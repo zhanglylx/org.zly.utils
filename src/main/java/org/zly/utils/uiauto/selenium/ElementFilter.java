@@ -14,11 +14,11 @@ import java.util.function.Predicate;
 @Data
 @Slf4j
 public class ElementFilter {
-    private RemoteWebDriver webDriver;
+    private WebDriver webDriver;
     private WebDriverWait webDriverWait;
 
 
-    public ElementFilter(RemoteWebDriver webDriver, WebDriverWait webDriverWait) {
+    public ElementFilter(WebDriver webDriver, WebDriverWait webDriverWait) {
         this.webDriver = webDriver;
         this.webDriverWait = webDriverWait;
     }

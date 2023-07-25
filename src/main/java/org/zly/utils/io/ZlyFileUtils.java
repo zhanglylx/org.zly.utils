@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -145,12 +146,8 @@ public class ZlyFileUtils {
     }
 
     public static void main(String[] args) {
-       traversalFolderFile(new File("E:\\test_group\\org-zly-utils\\src\\main\\java"), new Consumer<File>() {
-            @Override
-            public void accept(File file) {
-                System.out.println(file);
-            }
-        });
+//        final Properties properties = PropertiesLoaderUtils.loadProperties();
+
     }
 
     /**
@@ -304,12 +301,12 @@ public class ZlyFileUtils {
         getClassPathResource(path, path);
     }
 
-    public static File getClassPathResource(String copyPath, String path) throws IOException {
-        File inuModel = new File(copyPath);
-        Resource resource = new ClassPathResource(path);
+    public static File getClassPathResource(String copyTargetPath, String sourcePath) throws IOException {
+        File inuModel = new File(copyTargetPath);
+        Resource resource = new ClassPathResource(copyTargetPath);
         if (!inuModel.getParentFile().exists()) {
             if (!inuModel.getParentFile().mkdirs()) {
-                throw new IOException(copyPath + " create fail");
+                throw new IOException(copyTargetPath + " create fail");
             }
         }
         try (InputStream in = resource.getInputStream(); FileOutputStream out = new FileOutputStream(inuModel)) {

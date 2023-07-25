@@ -1,8 +1,10 @@
 package org.zly.utils;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.zly.utils.random.ZlyRandomNumberUtils;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -214,22 +216,6 @@ public class ZLYStringUtils {
         return String.valueOf(arr);
     }
 
-    public static void main(String[] args) {
-        System.out.println(strHashAscSort("qwertyuio"));
-        System.out.println(strHashAscSort("oiuytrewq"));
-        String a = "北京轩宇信息测试";
-        String b = "测试asdfsakdfsndafkds京afk北ds轩宇信息sdsfsdfdsfdsfdsf";
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(b.length());
-        System.out.println(ldStr(strHashAscSort(a),strHashAscSort(b)));
-//        System.out.println(sim("北京轩宇信息测试","北京轩宇信息"));
-//        System.out.println(74/64);
-//        if(b.contains(a));
-//        final int i = ldStr(a, b);
-//        if(i+a.length() == b)true;
-//        if((b.length()-i)/a)>0.9;
-    }
 
     /**
      * @param preNumber 前缀
@@ -240,6 +226,37 @@ public class ZLYStringUtils {
         //  （1）第一个%d代表整数类型（十进制），是preNumber的占位符，拼接字符串的时候会用preNumber的值进行替换。
         //  （2）第二个%010d，前面第一个0代表：数字前面补0；后面的10代表字符总长度为10，d代表整数类型。这个表达式的整体含义就是，用index的值来替换此处表达式，如果index的长度不足10位，则在index的前面用0补齐。
         return String.format("%d%010d", preNumber, index);
+    }
+
+    public static int judgeVersionNumber(String version, String separatorRegex, int... score) {
+        final String[] split = version.split(separatorRegex);
+        int[] v = new int[split.length];
+        for (int i = 0; i < split.length; i++) {
+            v[i] = Integer.parseInt(split[i]);
+        }
+        return judgeVersionNumber(v, score);
+    }
+
+
+    /**
+     * 检查版本号大小
+     * {8, 5, 6}  {8,5,6}  返回0
+     * {9, 5, 6}  {8,5,6}  返回1
+     * {8, 6, 6}  {8,5,6}  返回1
+     * {7, 5, 6}  {8,5,6}  返回-1
+     * {8, 4, 6}  {8,5,6}  返回-1
+     *
+     * @param version 需要检查的版本号
+     * @param score   版本号标准
+     * @return version 等于 score 返回 0  检查的版本号小于标准返回-1  检查的版本号大于标准返回1
+     */
+    public static int judgeVersionNumber(int[] version, int... score) {
+        if (score.length > version.length) throw new RuntimeException("格式不匹配，score长度大于version长度");
+        for (int i = 0; i < score.length; i++) {
+            if (version[i] > score[i]) return 1;
+        }
+        if (Arrays.equals(version, score)) return 0;
+        return -1;
     }
 
 }

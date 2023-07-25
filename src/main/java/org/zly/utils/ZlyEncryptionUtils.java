@@ -3,23 +3,26 @@ package org.zly.utils;
 
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.analysis.integration.gauss.SymmetricGaussIntegrator;
+import org.apache.poi.poifs.crypt.Encryptor;
 import org.zly.utils.network.ZlyHttpUtils;
 
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 
 /**
  * 加密工具类
  */
 public class ZlyEncryptionUtils {
-    public static void main(String[] args) {
-        String sign;
-        sign = getMd5Str("86106822","#","663a73f37c50f1e85ab41ccfb7b7cd46","#","f622b6c25196cdd0373a5be5d6494fe2");
-        System.out.println(sign);
-    }
+
+
     public static byte[] getMd5Byte(Object... str) {
         return getAlgorithmStr(false, "MD5", StandardCharsets.UTF_8, str);
 //        MessageDigest md5 = null;
@@ -60,12 +63,12 @@ public class ZlyEncryptionUtils {
     @SneakyThrows(NoSuchAlgorithmException.class)
     public static byte[] getAlgorithmStr(boolean urlEndecode, String algorithm, Charset encoder, Object... str) {
         if (str == null) throw new NullPointerException();
-        if (str.length==0) throw new IllegalArgumentException("arrays  is empty");
+        if (str.length == 0) throw new IllegalArgumentException("arrays  is empty");
         String string = StringUtils.join(str);
         if (urlEndecode) string = ZlyHttpUtils.getUrlEncoder(string, encoder);
-        MessageDigest md5 = MessageDigest.getInstance(algorithm);
-        md5.update(string.getBytes(StandardCharsets.UTF_8));
-        return md5.digest();
+        MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+        messageDigest.update(string.getBytes(StandardCharsets.UTF_8));
+        return messageDigest.digest();
     }
 
     /**
@@ -86,4 +89,5 @@ public class ZlyEncryptionUtils {
         }
         return hexString.toString();
     }
+
 }

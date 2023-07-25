@@ -136,5 +136,21 @@ public class ZlyDoubleUtils {
         return b.divide(one, scale, RoundingMode.DOWN).doubleValue();
     }
 
+    public static double progressRatioArithmetic(double current, double count) {
+        return progressRatioArithmetic(current, count, 100);
+    }
+
+    /**
+     * 完成进度比例计算
+     *
+     * @param current 当前完成的任务数量
+     * @param count   总的任务数量
+     * @param ratio   百分比
+     * @return 计算后的当前任务在总任务的百分比的占比进度
+     */
+    public static double progressRatioArithmetic(double current, double count, double ratio) {
+        final double div = ZlyDoubleUtils.div(current, count);
+        return ZlyDoubleUtils.mul(div, ratio);
+    }
 
 }

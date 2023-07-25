@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class App {
     public static void main(String[] args) {
         long l = System.currentTimeMillis();
+        
         String sss = "select decode(-USE_STATUS_INNET,-ACTIVITY_TYPE,-LOWER_USER_TYPE,CUSTOMER_ID) c1,\n" +
                 "       length(-USE_STATUS_INNET) c2,\n" +
                 "lengthb(-LOWER_USER_TYPE) c3,\n" +
