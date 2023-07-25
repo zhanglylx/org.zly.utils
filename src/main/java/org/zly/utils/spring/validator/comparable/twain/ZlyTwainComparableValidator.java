@@ -1,4 +1,4 @@
-package org.zly.utils.springUtils.validator;
+package org.zly.utils.spring.validator.comparable.twain;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -17,27 +17,27 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({TYPE})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = {CompariisonSizeValidatorImpl.class})
-@Repeatable(ZlyCompariisonSizeValidator.List.class)
-public @interface ZlyCompariisonSizeValidator {
+@Constraint(validatedBy = {TwainComparableValidatorImpl.class})
+@Repeatable(ZlyTwainComparableValidator.List.class)
+public @interface ZlyTwainComparableValidator {
 
     /**
-     * 起始日期
+     * 起始
      *
-     * @return 起始日期字段名称
+     * @return 起始字段名称
      */
     String firstField();
 
     /**
-     * 结束日期
+     * 第二个字段
      *
-     * @return 结束日期字段名称
+     * @return 第二个字段名称
      */
     String twoField();
 
-    String message() default "verification fails";
+    String message() default " Twain Comparable verification fails";
 
-    Class<? extends CompariisonSizeValidator> compariisonSizeValidator();
+    Class<? extends TwainComparableValidator> twainComparableValidator();
 
     Class<?>[] groups() default {};
 
@@ -47,6 +47,6 @@ public @interface ZlyCompariisonSizeValidator {
     @Retention(RUNTIME)
     @Documented
     @interface List {
-        ZlyCompariisonSizeValidator[] value();
+        ZlyTwainComparableValidator[] value();
     }
 }

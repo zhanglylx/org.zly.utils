@@ -1,4 +1,4 @@
-package org.zly.utils.springUtils.validator;
+package org.zly.utils.spring.validator.comparable.twain;
 
 /**
  * 大于等于
@@ -6,7 +6,7 @@ package org.zly.utils.springUtils.validator;
  * @author zhanglianyu
  * @date 2023-07-24 17:06
  */
-public class GreaterOrEqualCompariisonSizeValidator implements CompariisonSizeValidator {
+public class GreaterOrEqualTwainComparableValidator implements TwainComparableValidator {
     @Override
     public boolean validatorHandler(Comparable<Object> first, Comparable<Object> two) {
         return first.compareTo(two) >= 0;

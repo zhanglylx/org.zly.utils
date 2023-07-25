@@ -1,4 +1,4 @@
-package org.zly.utils.springUtils.validator;
+package org.zly.utils.spring.validator.comparable.twain;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,36 +14,31 @@ import java.lang.reflect.Field;
  * @date 2023-07-24 11:08
  */
 @Slf4j
-public class CompariisonSizeValidatorImpl implements ConstraintValidator<ZlyCompariisonSizeValidator, Object> {
+public class TwainComparableValidatorImpl implements ConstraintValidator<ZlyTwainComparableValidator, Object> {
 
-    private ZlyCompariisonSizeValidator zlyMultipleDateTime;
-
-    public CompariisonSizeValidatorImpl() {
-        System.out.println("-=====================================");
-    }
+    private ZlyTwainComparableValidator zlyTwainComparableValidator;
 
     @Override
-    public void initialize(ZlyCompariisonSizeValidator constraintAnnotation) {
+    public void initialize(ZlyTwainComparableValidator constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
-        this.zlyMultipleDateTime = constraintAnnotation;
+        this.zlyTwainComparableValidator = constraintAnnotation;
     }
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        System.out.println("0000000000000000000000000000");
-        if (StringUtils.isBlank(zlyMultipleDateTime.firstField()))
+        if (StringUtils.isBlank(zlyTwainComparableValidator.firstField()))
             throw new IllegalArgumentException("firstField 不能为空");
-        if (StringUtils.isBlank(zlyMultipleDateTime.twoField())) throw new IllegalArgumentException("twoField 不能为空");
-        final Comparable<Object> first = getComparable(value, zlyMultipleDateTime.firstField());
-        final Comparable<Object> two = getComparable(value, zlyMultipleDateTime.twoField());
-        final Class<? extends CompariisonSizeValidator> aClass = this.zlyMultipleDateTime.compariisonSizeValidator();
-        if (aClass == null) throw new IllegalArgumentException("dateTimeValidatorClass 不能为空");
+        if (StringUtils.isBlank(zlyTwainComparableValidator.twoField())) throw new IllegalArgumentException("twoField 不能为空");
+        final Comparable<Object> first = getComparable(value, zlyTwainComparableValidator.firstField());
+        final Comparable<Object> two = getComparable(value, zlyTwainComparableValidator.twoField());
+        final Class<? extends TwainComparableValidator> aClass = this.zlyTwainComparableValidator.twainComparableValidator();
+        if (aClass == null) throw new IllegalArgumentException("twainComparableValidator 不能为空");
         try {
-            final CompariisonSizeValidator compariisonSizeValidator = aClass.newInstance();
-            return compariisonSizeValidator.validatorHandler(first, two);
+            final TwainComparableValidator twainComparableValidator = aClass.newInstance();
+            return twainComparableValidator.validatorHandler(first, two);
         } catch (InstantiationException | IllegalAccessException e) {
-            log.error("实例化dateTimeValidator失败", e);
-            throw new RuntimeException("实例化dateTimeValidator失败");
+            log.error("实例化twainComparableValidator失败", e);
+            throw new RuntimeException("实例化twainComparableValidator失败");
         }
     }
 
