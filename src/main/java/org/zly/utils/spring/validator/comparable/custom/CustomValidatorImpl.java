@@ -26,12 +26,13 @@ public class CustomValidatorImpl implements ConstraintValidator<ZlyCustomValidat
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (value == null) throw new IllegalArgumentException("Custom Validator value is null");
+        if (value == null)
+            throw new IllegalArgumentException("Custom Validator value is null:verification[" + context.getDefaultConstraintMessageTemplate() + "]fail");
         final Class<? extends CustomValidator> aClass = this.zlyCustomValidator.singleComparisonValidator();
         if (aClass == null) throw new IllegalArgumentException("singleComparisonValidator 不能为空");
         try {
             final CustomValidator customValidator = aClass.newInstance();
-            return customValidator.validatorHandler(value,this.zlyCustomValidator);
+            return customValidator.validatorHandler(value, this.zlyCustomValidator);
         } catch (InstantiationException | IllegalAccessException e) {
             log.error("实例化singleComparisonValidator失败", e);
             throw new RuntimeException("实例化singleComparisonValidator失败");

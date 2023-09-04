@@ -28,7 +28,8 @@ public class TwainComparableValidatorImpl implements ConstraintValidator<ZlyTwai
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (StringUtils.isBlank(zlyTwainComparableValidator.firstField()))
             throw new IllegalArgumentException("firstField 不能为空");
-        if (StringUtils.isBlank(zlyTwainComparableValidator.twoField())) throw new IllegalArgumentException("twoField 不能为空");
+        if (StringUtils.isBlank(zlyTwainComparableValidator.twoField()))
+            throw new IllegalArgumentException("twoField 不能为空");
         final Comparable<Object> first = getComparable(value, zlyTwainComparableValidator.firstField());
         final Comparable<Object> two = getComparable(value, zlyTwainComparableValidator.twoField());
         final Class<? extends TwainComparableValidator> aClass = this.zlyTwainComparableValidator.twainComparableValidator();
@@ -48,6 +49,7 @@ public class TwainComparableValidatorImpl implements ConstraintValidator<ZlyTwai
             final Field field = value.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             final Object o = field.get(value);
+            if (o == null) throw new NullPointerException(fieldName + " is null");
             if (o instanceof Comparable) {
                 return (Comparable<Object>) o;
             }

@@ -29,6 +29,59 @@ import java.util.function.Function;
  * 获取或创建Excle
  */
 public class ZlyExcelUtils {
+    public static void main(String[] args) throws IOException {
+        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new File("C:\\Users\\Administrator\\Desktop\\无标题.xlsx"));
+        final Map<String, String> map = excelXlsx.get(0);
+        excelXlsx.forEach(new BiConsumer<Integer, Map<String, String>>() {
+            @Override
+            public void accept(Integer integer, Map<String, String> stringStringMap) {
+                final String 第三方测量材料确认1 = stringStringMap.get("第三方测量材料确认");
+                final String[] split = 第三方测量材料确认1.split(",");
+                if(ArrayUtils.isEmpty(split))return;
+                StringBuilder sb = new StringBuilder();
+                for (String s : split) {
+                    switch (s) {
+                        case "1":
+                            sb.append("测量方案");
+                            break;
+                        case "2":
+                            sb.append("调查问卷");
+                            break;
+                        case "3":
+                            sb.append("实施方案");
+                            break;
+                        case "4":
+                            sb.append("数据库");
+                            break;
+                        case "5":
+                            sb.append("被访者名单");
+                            break;
+                        case "6":
+                            sb.append("第三方测量报告");
+                            break;
+                        case "undefined":
+                            continue;
+                        default:
+                            if(split.length==1){
+                                final String s1 = split[0];
+                                if(StringUtils.isBlank(s1))return;
+                            }
+                            throw new IllegalArgumentException(s);
+                    }
+                    sb.append(",");
+                }
+                stringStringMap.put("第三方测量材料确认",StringUtils.chop(sb.toString()));
+            }
+        });
+        excelXlsx.forEach(new BiConsumer<Integer, Map<String, String>>() {
+            @Override
+            public void accept(Integer integer, Map<String, String> stringStringMap) {
+                System.out.println(stringStringMap.get("第三方测量材料确认"));
+            }
+        });
+        ZlyExcelUtils.createExcelFile(new File("C:\\Users\\Administrator\\Desktop\\无标题1.xlsx"),"满意度导出",excelXlsx);
+    }
+
     /**
      * 创建并写入xlsx文件
      *
@@ -304,15 +357,6 @@ public class ZlyExcelUtils {
         return cell == null ? "" : cell.toString();
     }
 
-
-    public static void main(String[] args) throws IOException {
-        final File file = new File("C:\\Users\\Administrator\\Desktop\\sr_check\\标准-拆分表.xlsx");
-        ZlyExcelUtils.getExcelXlsx(file);
-//        final List<AA> excelXlsxByClass = ZlyExcelUtils.getExcelXlsxByClass(file, AA.class);
-//        System.out.println(excelXlsxByClass);
-//        final Map<Integer, Map<String, String>> excelXlsx = ZlyExcelUtils.getExcelXlsx(new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\订单\\每班结帐报告 -- 收入总结.xlsx")), 0);
-
-    }
 
     @Data
     public static class AA {

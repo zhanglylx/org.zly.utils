@@ -65,6 +65,6 @@ public class ZlyGlobalExceptionHandler {
         BaseResultFactoryImpl<Object> testCenterResult = new BaseResultFactoryImpl<>();
         HttpHeaders headers = new HttpHeaders();
         headers.set(ZlyContentType.CONTENT_TYPE, ZlyContentType.APPLICATION_JSON_VALUE);
-        return new ResponseEntity<>(testCenterResult.createErrorException(exception), headers, HttpStatus.OK);
+        return new ResponseEntity<>(testCenterResult.createErrorException("服务发生异常", exception), headers, HttpStatus.OK);
     }
 }

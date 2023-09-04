@@ -4,7 +4,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.zly.utils.random.ZlyRandomNumberUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -257,6 +259,34 @@ public class ZLYStringUtils {
         }
         if (Arrays.equals(version, score)) return 0;
         return -1;
+    }
+
+    /**
+     * 获取${}中变量
+     * \\$表示匹配${}中的$字符；
+     * <p>
+     * \\{和\\}表示匹配{}字符；
+     * <p>
+     * ([^}]+)表示匹配任意字符，但不包含}字符，+表示前面的字符可以出现一次或多次；
+     * <p>
+     * ()用于分组，即将${}中的内容分成一组。
+     *
+     * @param str
+     * @return
+     */
+    public static List<String> getVariables(String str) {
+        List<String> variables = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\$\\{([^}]*)}");
+        Matcher matcher = pattern.matcher(str);
+        while (matcher.find()) {
+            variables.add(matcher.group(1));
+        }
+        return variables;
+    }
+
+    public static String generateVariables(String str) {
+        if (str == null) throw new NullPointerException("str is null");
+        return "${" + str + "}";
     }
 
 }
