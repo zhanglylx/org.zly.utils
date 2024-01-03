@@ -1,5 +1,7 @@
 package org.zly.utils.exception;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author zhanglianyu
  * @date 2022-05-14 10:21
@@ -8,9 +10,12 @@ public class NotFindException extends RuntimeException {
     public NotFindException() {
     }
 
+    public NotFindException(String... message) {
+        super(StringUtils.join(message, ""));
+    }
 
     public NotFindException(String message) {
-        super("未找到【" + message + "】");
+        super(message);
     }
 
     public NotFindException(String message, Throwable cause) {

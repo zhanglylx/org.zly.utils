@@ -39,6 +39,31 @@
 <!--        </dependency>-->
 
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://119.3.162.35:3081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://119.3.162.35:3081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <!--代理仓库-->
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Reposotory</name>
+            <url>http://119.3.162.35:3081/repository/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
             <plugins>

@@ -17,7 +17,7 @@ public class ZlyAuthenticationFailedException extends RuntimeException {
     }
 
     public ZlyAuthenticationFailedException(String message) {
-        super("验证失败【" + message + "】");
+        super(message);
     }
 
     public ZlyAuthenticationFailedException(String message, Throwable cause) {
