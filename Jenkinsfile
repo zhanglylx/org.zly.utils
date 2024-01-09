@@ -73,6 +73,17 @@ pipeline{
                 }
                 if("${JENKINS_ENV}" == 'dev'){
                 }
+                switch(app){
+                   case 'gateway':
+                     env.ipv4Address="$gatewayIpv4Address"
+                     break
+                   case 'client':
+                     env.ipv4Address="$clientIpv4Address"
+                     break
+                   default:
+                     echo "不支持的app选项:$app"
+                     sh 'exit 127'
+                }
 	        }
 		  }
 	   }
