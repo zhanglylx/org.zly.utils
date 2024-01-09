@@ -68,7 +68,12 @@ pipeline{
 	   stage('将自定义镜像推送到Harbor'){
 	      steps{
 		    echo '将自定义镜像推送到Harbor  - SUCCESS'
-
+	        script {
+                if("${JENKINS_ENV}" == 'qa'){
+                }
+                if("${JENKINS_ENV}" == 'dev'){
+                }
+	        }
 		  }
 	   }
 	   stage('通过Publish  Over SSH通知目标服务器'){
@@ -83,3 +88,18 @@ pipeline{
 
 
 }
+
+//环境变量更新
+//在environment已设置的环境变量
+//                  withEnv(["ipv4Address=172.16.238.51"]) { // 将"MY_VARIABLE"的值更改为"newValue"
+//                          echo "$ipv4Address"      // 这里放入需要运行的命令或脚本
+//                  }
+//创建新的环境变量
+//如果在在environment已设置的环境变量，下边的环境变量更新不生效
+//第一种 执行脚本
+//                 env.ipv4Address= sh (
+//                         script: 'echo 172.16.238.51',
+//                         returnStdout: true
+//                     ).trim()
+//第二种 直接赋值
+//env.ipv4Address="172.16.238.51"
