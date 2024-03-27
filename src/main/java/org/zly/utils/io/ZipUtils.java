@@ -1,13 +1,21 @@
 package org.zly.utils.io;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.StreamUtils;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 
@@ -131,10 +139,6 @@ public class ZipUtils {
         }
     }
 
-    public static void unzipFile(File src, File target) throws IOException {
-        unzipFile(src, target, ZipFile.OPEN_READ, StandardCharsets.UTF_8);
-    }
-
 
     public static void unzipFile(File src, File target, int mode, Charset charset) throws IOException {
         try (ZipFile zipFile = new ZipFile(src, mode, charset)) {
@@ -154,7 +158,19 @@ public class ZipUtils {
 
             }
         }
+    }
 
+    public static void unzip(InputStream src, BiConsumer<ZipEntry, byte[]> consumer) throws IOException {
+        try (ZipInputStream zipInputStream = new ZipInputStream(src)) {
+            ZipEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                if (zipEntry.isDirectory()) {
+                    consumer.accept(zipEntry, null);
+                } else {
+                    consumer.accept(zipEntry, StreamUtils.copyToByteArray(zipInputStream));
+                }
+            }
+        }
 
     }
 

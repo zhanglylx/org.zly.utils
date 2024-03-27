@@ -303,7 +303,7 @@ public class ZlyFileUtils {
 
     public static File getClassPathResource(String copyTargetPath, String sourcePath) throws IOException {
         File inuModel = new File(copyTargetPath);
-        Resource resource = new ClassPathResource(copyTargetPath);
+        Resource resource = new ClassPathResource(sourcePath);
         if (!inuModel.getParentFile().exists()) {
             if (!inuModel.getParentFile().mkdirs()) {
                 throw new IOException(copyTargetPath + " create fail");

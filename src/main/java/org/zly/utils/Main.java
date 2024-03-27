@@ -4,10 +4,12 @@ import org.zly.utils.io.ZlyExcelUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        System.out.println("-Duser.timezone=GMT+8".matches(".*-Duser\\.timezone=.+"));
+        System.out.println(ZoneId.systemDefault());
+//        System.out.println("-Duser.timezone=GMT+8".matches(".*-Duser\\.timezone=.+"));
 //        long time = System.currentTimeMillis();
 //        System.out.println( ZlyExcelUtils.getExcelXlsx(new File("C:\\Users\\Administrator\\Desktop\\问题反馈.xlsx")));
 //        System.out.println(System.currentTimeMillis()-time);
