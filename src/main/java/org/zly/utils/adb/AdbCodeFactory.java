@@ -31,6 +31,11 @@ public class AdbCodeFactory {
         });
     }
 
+    public static void main(String[] args) {
+        final Input input = AdbCodeFactory.getInput();
+        input.tap(1,2);
+        System.out.println(input);
+    }
     public static NoShell getNoShell() {
         return getInstance(new NoShell() {
         });
